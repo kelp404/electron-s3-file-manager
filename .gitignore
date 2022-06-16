@@ -1,0 +1,11 @@
+# OS X
+.DS_Store
+
+# npm
+node_modules
+package-lock.json
+
+# WebStorm
+.idea
+
+out/
