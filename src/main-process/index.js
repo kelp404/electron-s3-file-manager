@@ -1,5 +1,6 @@
-const {app, BrowserWindow} = require('electron');
 const path = require('path');
+const {app, BrowserWindow} = require('electron');
+const isDev = require('electron-is-dev');
 
 function createWindow() {
 	const mainWindow = new BrowserWindow({
@@ -10,11 +11,12 @@ function createWindow() {
 		},
 	});
 
-	mainWindow.loadURL('http://localhost:3000/index.html');
-	mainWindow.webContents.openDevTools();
-
-	// Todo: for production
-	// mainWindow.loadFile('./build/index.html');
+	if (isDev) {
+		mainWindow.loadURL('http://localhost:3000/index.html');
+		mainWindow.webContents.openDevTools();
+	} else {
+		mainWindow.loadFile('dist/renderer-process/index.html');
+	}
 }
 
 app.whenReady().then(() => {

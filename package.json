@@ -2,8 +2,12 @@
   "name": "electron-s3-file-manager",
   "version": "0.1.0",
   "description": "A GUI AWS S3 file manager. It supports keyword search, download, upload and preview video.",
-  "main": "main.js",
+  "main": "dist/main-process/index.js",
   "scripts": {
+    "build": "npm run clear:build && npm run build:renderer && npm run build:main && node build-electron.js",
+    "build:main": "cp -r src/main-process dist/.",
+    "build:renderer": "NODE_ENV=production webpack",
+    "clear:build": "rm -rf dist",
     "dev": "concurrently --kill-others \"webpack serve\" \"wait-on tcp:3000 && electron src/main-process/index.js\"",
     "eslint": "eslint ./ --ignore-path .gitignore --ignore-pattern migrations/",
     "ncu": "npm-check-updates",
@@ -21,7 +25,7 @@
   },
   "homepage": "https://github.com/kelp404/electron-s3-file-manager#readme",
   "dependencies": {
-    "electron": "19.0.4"
+    "electron-is-dev": "2.0.0"
   },
   "devDependencies": {
     "@babel/core": "7.18.5",
@@ -31,6 +35,8 @@
     "babel-loader": "8.2.5",
     "concurrently": "7.2.2",
     "css-minimizer-webpack-plugin": "4.0.0",
+    "electron": "19.0.4",
+    "electron-builder": "23.0.3",
     "eslint": "8.17.0",
     "eslint-config-xo": "0.41.0",
     "eslint-config-xo-react": "0.27.0",

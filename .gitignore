@@ -8,4 +8,5 @@ package-lock.json
 # WebStorm
 .idea
 
-out/
+# build
+dist/
