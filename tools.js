@@ -1,4 +1,5 @@
 const fs = require('fs');
+const path = require('path');
 const bluebird = require('bluebird');
 const {program} = require('commander');
 const pLimit = require('p-limit');
@@ -11,11 +12,17 @@ program
 	.usage(
 		`
   Force sync database schema (drop tables then create).
-    node tools.js sync`);
+    node tools.js sync
+
+	Build electron app.
+		node tools.js build`);
 
 program
 	.command('sync')
 	.description('sync database schema');
+program
+	.command('build')
+	.description('build electron app');
 
 program.parse(process.argv);
 
@@ -33,11 +40,37 @@ async function sync() {
 	);
 }
 
+function build() {
+	return require('electron-builder')
+		.build({
+			projectDir: path.resolve(__dirname),
+			win: ['portable'],
+			mac: ['dmg'],
+			config: {
+				copyright: 'Copyright © 2022 kelp404',
+				directories: {
+					output: 'dist',
+				},
+				files: [
+					'package.json',
+					'dist/main-process/**/*',
+					'dist/renderer-process/**/*',
+					'dist/shared/**/*',
+				],
+				extends: null,
+			},
+		});
+}
+
 async function execute() {
 	const {args} = program;
 
 	if (args[0] === 'sync') {
 		return sync();
+	}
+
+	if (args[0] === 'build') {
+		return build();
 	}
 
 	return program.help();
