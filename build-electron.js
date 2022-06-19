@@ -15,6 +15,7 @@ builder
 				'package.json',
 				'dist/main-process/**/*',
 				'dist/renderer-process/**/*',
+				'dist/shared/**/*',
 			],
 			extends: null,
 		},
