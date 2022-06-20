@@ -1,11 +1,7 @@
 const fs = require('fs');
 const path = require('path');
-const bluebird = require('bluebird');
 const {program} = require('commander');
 const pLimit = require('p-limit');
-
-bluebird.longStackTraces();
-global.Promise = bluebird;
 
 program
 	.name(' ')
