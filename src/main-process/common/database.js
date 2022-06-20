@@ -70,9 +70,7 @@ exports.runMigrations = async () => {
 	);
 	const ranMigrations = results.map(r => r.name);
 
-	migrationFiles = migrationFiles.filter(mf => {
-		return (!ranMigrations.includes(mf));
-	});
+	migrationFiles = migrationFiles.filter(mf => !ranMigrations.includes(mf));
 	migrationFiles.forEach(file => {
 		console.log(`\t${file}`);
 	});
