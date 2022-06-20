@@ -1,3 +1,5 @@
+require('./stylesheets/index.scss');
+
 const React = require('react');
 const {createRoot} = require('react-dom/client');
 
