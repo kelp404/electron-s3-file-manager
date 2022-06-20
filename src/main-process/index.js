@@ -1,10 +1,19 @@
 const path = require('path');
-const {app, BrowserWindow} = require('electron');
+const {app, BrowserWindow, ipcMain} = require('electron');
 const isDev = require('electron-is-dev');
+const {
+	BadRequestError,
+} = require('../shared/errors');
+const {
+	MAIN_API,
+} = require('../shared/constants/ipc');
+const {connectDatabase, runMigrations} = require('./common/database');
 
 try {
 	require('electron-reload')(__dirname);
 } catch {}
+
+connectDatabase({isLogSQL: isDev});
 
 function createWindow() {
 	const mainWindow = new BrowserWindow({
@@ -23,7 +32,36 @@ function createWindow() {
 	}
 }
 
-app.whenReady().then(() => {
+function generateIpcMainApiHandler() {
+	const handlers = require('./ipc-handlers');
+
+	return async (event, args = {}) => {
+		const startTime = new Date();
+
+		try {
+			const {method, data} = args;
+			const handler = handlers[method];
+
+			if (typeof handler !== 'function') {
+				throw new BadRequestError(`not found "${method}"`);
+			}
+
+			return await handler(data);
+		} finally {
+			const processTimeInMillisecond = Date.now() - startTime;
+			const processTime = `${processTimeInMillisecond}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
+			console.log(
+				`${MAIN_API} ${processTime.padStart(7)}ms ${`${args?.method}                              `.slice(0, 30)}`,
+				{data: args?.data},
+			);
+		}
+	};
+}
+
+app.whenReady().then(async () => {
+	await runMigrations();
+	ipcMain.handle(MAIN_API, generateIpcMainApiHandler());
 	createWindow();
 
 	app.on('activate', () => {
