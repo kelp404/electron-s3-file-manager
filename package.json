@@ -50,6 +50,7 @@
     "conventional-changelog-cli": "2.2.2",
     "css-loader": "6.7.1",
     "css-minimizer-webpack-plugin": "4.0.0",
+    "darkreader": "4.9.51",
     "electron": "19.0.4",
     "electron-builder": "23.0.3",
     "electron-reload": "2.0.0-alpha.1",

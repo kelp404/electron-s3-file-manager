@@ -16,3 +16,14 @@ exports.makeFormikValidator = checkFunction => values => {
 	});
 	return result;
 };
+
+exports.loadStylesheet = href => new Promise((resolve, reject) => {
+	const link = document.createElement('link');
+
+	link.href = href;
+	link.rel = 'stylesheet';
+	link.onload = () => resolve(link);
+	link.onerror = error => reject(error);
+
+	document.head.append(link);
+});

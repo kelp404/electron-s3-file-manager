@@ -11,6 +11,7 @@ module.exports = () => {
 		mode: IS_DEVELOPMENT ? 'development' : 'production',
 		entry: {
 			renderer: path.join(__dirname, 'src', 'renderer-process', 'index.js'),
+			'dark-theme': path.join(__dirname, 'src', 'renderer-process', 'stylesheets', 'dark-theme.scss'),
 		},
 		devServer: {
 			host: 'localhost',
