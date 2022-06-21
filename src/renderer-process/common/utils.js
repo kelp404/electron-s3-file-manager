@@ -17,6 +17,14 @@ exports.makeFormikValidator = checkFunction => values => {
 	return result;
 };
 
+exports.addBusyClass = () => {
+	document.body.classList.add('busy');
+};
+
+exports.removeBusyClass = () => {
+	document.body.classList.remove('busy');
+};
+
 exports.loadStylesheet = href => new Promise((resolve, reject) => {
 	const link = document.createElement('link');
 

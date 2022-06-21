@@ -1,0 +1,6 @@
+body.busy {
+  cursor: wait !important;
+  div, input, textarea, button, select, img, a, label {
+    cursor: wait !important;
+  }
+}
