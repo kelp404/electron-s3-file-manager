@@ -33,24 +33,63 @@ module.exports = class S3Settings extends React.Component {
 		const isSubmitted = submitCount > 0;
 
 		return (
-			<Form>
-				<div className="mb-3">
-					<label htmlFor="input-accessKeyId" className="form-label">Access Key ID</label>
-					<Field
-						autoFocus
-						type="text" id="input-accessKeyId" name="accessKeyId"
-						className={classnames(
-							'form-control',
-							{'is-invalid': errors.accessKeyId && isSubmitted},
-						)}
-						maxLength={updateS3SettingsFormSchema.accessKeyId.max}/>
-					{
-						(errors.accessKeyId && isSubmitted) && (
-							<div className="invalid-feedback">
-								{errors.accessKeyId}
-							</div>
-						)
-					}
+			<Form className="card">
+				<div className="card-header">
+					S3 Settings
+				</div>
+				<div className="card-body">
+					<div className="mb-3">
+						<label htmlFor="input-accessKeyId" className="form-label">Access Key ID</label>
+						<Field
+							autoFocus
+							type="text" id="input-accessKeyId" name="accessKeyId"
+							className={classnames(
+								'form-control',
+								{'is-invalid': errors.accessKeyId && isSubmitted},
+							)}
+							maxLength={updateS3SettingsFormSchema.accessKeyId.max}/>
+						{
+							(errors.accessKeyId && isSubmitted) && (
+								<div className="invalid-feedback">
+									{errors.accessKeyId}
+								</div>
+							)
+						}
+					</div>
+					<div className="mb-3">
+						<label htmlFor="input-secretAccessKey" className="form-label">Secret Access Key</label>
+						<Field
+							type="text" id="input-secretAccessKey" name="secretAccessKey"
+							className={classnames(
+								'form-control',
+								{'is-invalid': errors.secretAccessKey && isSubmitted},
+							)}
+							maxLength={updateS3SettingsFormSchema.secretAccessKey.max}/>
+						{
+							(errors.secretAccessKey && isSubmitted) && (
+								<div className="invalid-feedback">
+									{errors.secretAccessKey}
+								</div>
+							)
+						}
+					</div>
+					<div className="mb-3">
+						<label htmlFor="input-region" className="form-label">Region</label>
+						<Field
+							type="text" id="input-region" name="region"
+							className={classnames(
+								'form-control',
+								{'is-invalid': errors.region && isSubmitted},
+							)}
+							maxLength={updateS3SettingsFormSchema.region.max}/>
+						{
+							(errors.region && isSubmitted) && (
+								<div className="invalid-feedback">
+									{errors.region}
+								</div>
+							)
+						}
+					</div>
 				</div>
 			</Form>
 		);
@@ -61,8 +100,11 @@ module.exports = class S3Settings extends React.Component {
 
 		return (
 			<div className="container-fluid">
-				<div className="row">
-					<div className="col-12">
+				<div className="row justify-content-center">
+					<div
+						className="col-12 col-sm-10 col-md-8 col-lg-6 d-flex flex-column justify-content-center"
+						style={{minHeight: '100vh'}}
+					>
 						<Formik
 							initialValues={this.generateS3SettingsInitialValues()}
 							validate={validateUpdateS3SettingsForm}
