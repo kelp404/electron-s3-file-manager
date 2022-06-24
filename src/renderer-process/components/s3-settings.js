@@ -22,6 +22,7 @@ module.exports = class S3Settings extends React.Component {
 			accessKeyId: '',
 			secretAccessKey: '',
 			region: '',
+			bucket: '',
 		};
 	}
 
@@ -90,6 +91,26 @@ module.exports = class S3Settings extends React.Component {
 							)
 						}
 					</div>
+					<div className="mb-3">
+						<label htmlFor="input-bucket" className="form-label">Bucket</label>
+						<Field
+							type="text" id="input-bucket" name="bucket"
+							className={classnames(
+								'form-control',
+								{'is-invalid': errors.bucket && isSubmitted},
+							)}
+							maxLength={updateS3SettingsFormSchema.bucket.max}/>
+						{
+							(errors.bucket && isSubmitted) && (
+								<div className="invalid-feedback">
+									{errors.bucket}
+								</div>
+							)
+						}
+					</div>
+					<button type="submit" className="btn btn-outline-primary">
+						Save
+					</button>
 				</div>
 			</Form>
 		);

@@ -14,4 +14,9 @@ module.exports = {
 		empty: false,
 		max: 255,
 	},
+	bucket: {
+		type: 'string',
+		empty: false,
+		max: 255,
+	},
 };

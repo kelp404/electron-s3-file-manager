@@ -1,4 +1,5 @@
 const crypto = require('crypto');
+const lodash = require('lodash');
 const {DataTypes} = require('sequelize');
 const {connectDatabase} = require('../../common/database');
 const utils = require('../../common/utils');
@@ -36,10 +37,23 @@ const attributes = {
 		type: DataTypes.STRING,
 		allowNull: true,
 	},
+	bucket: {
+		type: DataTypes.STRING,
+		allowNull: true,
+	},
 };
 const options = {
 	indexes: [],
 };
 const Model = sequelize.define('settings', attributes, options);
+
+Model.prototype.toJSON = function () {
+	const result = lodash.cloneDeep(this.get({plain: false}));
+
+	delete result.cryptoIv;
+	delete result.secretAccessKey;
+
+	return result;
+};
 
 module.exports = Model;
