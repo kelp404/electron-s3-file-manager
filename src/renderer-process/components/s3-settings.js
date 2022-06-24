@@ -121,10 +121,7 @@ module.exports = class S3Settings extends React.Component {
 
 		return (
 			<div className="row justify-content-center">
-				<div
-					className="col-12 col-sm-10 col-md-8 col-lg-6 d-flex flex-column justify-content-center"
-					style={{minHeight: 'calc(100vh - 60px)'}}
-				>
+				<div className="col-12 col-sm-10 col-md-8 col-lg-6 d-flex flex-column justify-content-center">
 					<Formik
 						initialValues={this.generateS3SettingsInitialValues()}
 						validate={validateUpdateS3SettingsForm}

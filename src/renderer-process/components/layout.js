@@ -43,10 +43,7 @@ module.exports = class Layout extends Base {
 
 		return (
 			<div className="row">
-				<div
-					className="col-12 d-flex flex-column justify-content-center"
-					style={{minHeight: 'calc(100vh - 60px)'}}
-				>
+				<div className="col-12 d-flex flex-column justify-content-center">
 					<Loading/>
 				</div>
 			</div>
@@ -57,10 +54,12 @@ module.exports = class Layout extends Base {
 		const {currentNavigationTab} = this.state;
 
 		return (
-			<div className="container-fluid">
+			<>
 				<Navigation currentTab={currentNavigationTab}/>
-				{this.renderContent()}
-			</div>
+				<div className="container-fluid py-3" style={{minHeight: 'calc(100vh - 50px)'}}>
+					{this.renderContent()}
+				</div>
+			</>
 		);
 	}
 };

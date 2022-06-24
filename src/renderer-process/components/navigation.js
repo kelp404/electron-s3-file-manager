@@ -24,36 +24,34 @@ module.exports = class Navigation extends React.PureComponent {
 		const {currentTab} = this.props;
 
 		return (
-			<div className="row">
-				<nav className="p-0">
-					<div className="nav nav-tabs px-2">
-						<button
-							data-tab-name={NAVIGATION_TABS.OBJECTS}
-							className={classnames(
-								'nav-link rounded-0',
-								{active: currentTab === NAVIGATION_TABS.OBJECTS},
-							)}
-							style={{borderBottomColor: 'transparent'}}
-							type="button"
-							onClick={this.onClickTab}
-						>
-							Objects
-						</button>
-						<button
-							data-tab-name={NAVIGATION_TABS.SETTINGS}
-							className={classnames(
-								'nav-link rounded-0',
-								{active: currentTab === NAVIGATION_TABS.SETTINGS},
-							)}
-							style={{borderBottomColor: 'transparent'}}
-							type="button"
-							onClick={this.onClickTab}
-						>
-							Settings
-						</button>
-					</div>
-				</nav>
-			</div>
+			<nav className="sticky-top">
+				<div className="nav nav-tabs px-2">
+					<button
+						data-tab-name={NAVIGATION_TABS.OBJECTS}
+						className={classnames(
+							'nav-link rounded-0',
+							{active: currentTab === NAVIGATION_TABS.OBJECTS},
+						)}
+						style={{borderBottomColor: 'transparent'}}
+						type="button"
+						onClick={this.onClickTab}
+					>
+						Objects
+					</button>
+					<button
+						data-tab-name={NAVIGATION_TABS.SETTINGS}
+						className={classnames(
+							'nav-link rounded-0',
+							{active: currentTab === NAVIGATION_TABS.SETTINGS},
+						)}
+						style={{borderBottomColor: 'transparent'}}
+						type="button"
+						onClick={this.onClickTab}
+					>
+						Settings
+					</button>
+				</div>
+			</nav>
 		);
 	}
 };
