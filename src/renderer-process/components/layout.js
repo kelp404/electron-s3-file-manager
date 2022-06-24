@@ -27,6 +27,7 @@ module.exports = class Layout extends Base {
 
 		api.send({method: 'getSettings'})
 			.then(settings => {
+				store.set(STORE_KEYS.SETTINGS, settings);
 				store.set(
 					STORE_KEYS.CURRENT_NAVIGATION_TAB,
 					settings?.accessKeyId ? NAVIGATION_TABS.OBJECTS : NAVIGATION_TABS.SETTINGS,

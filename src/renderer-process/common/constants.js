@@ -5,5 +5,6 @@ module.exports = {
 	},
 	STORE_KEYS: {
 		CURRENT_NAVIGATION_TAB: 'CURRENT_NAVIGATION_TAB',
+		SETTINGS: 'SETTINGS',
 	},
 };

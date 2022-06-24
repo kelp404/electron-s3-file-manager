@@ -5,24 +5,32 @@ const {
 	updateS3SettingsFormSchema,
 } = require('../../shared/validation/form-schemas/settings');
 const {
+	validateSetupS3SettingsForm,
 	validateUpdateS3SettingsForm,
 } = require('../validators/settings-validator');
 const utils = require('../common/utils');
+const {
+	STORE_KEYS,
+} = require('../common/constants');
+const store = require('../common/store');
+const Base = require('./shared/base');
 
-module.exports = class S3Settings extends React.Component {
+module.exports = class S3Settings extends Base {
 	constructor(props) {
 		super(props);
 		this.validators = {
+			validateSetupS3SettingsForm: utils.makeFormikValidator(validateSetupS3SettingsForm),
 			validateUpdateS3SettingsForm: utils.makeFormikValidator(validateUpdateS3SettingsForm),
 		};
+		this.state.settings = store.get(STORE_KEYS.SETTINGS);
 	}
 
-	generateS3SettingsInitialValues() {
+	generateS3SettingsInitialValues(settings) {
 		return {
-			accessKeyId: '',
+			accessKeyId: settings?.accessKeyId || '',
 			secretAccessKey: '',
-			region: '',
-			bucket: '',
+			region: settings?.region || '',
+			bucket: settings?.bucket || '',
 		};
 	}
 
@@ -31,6 +39,8 @@ module.exports = class S3Settings extends React.Component {
 	}
 
 	renderCreateFolderForm = ({errors, submitCount}) => {
+		const {settings} = this.state;
+		const isSetupS3Settings = !settings?.accessKeyId;
 		const isSubmitted = submitCount > 0;
 
 		return (
@@ -58,9 +68,11 @@ module.exports = class S3Settings extends React.Component {
 						}
 					</div>
 					<div className="mb-3">
-						<label htmlFor="input-secretAccessKey" className="form-label">Secret Access Key</label>
+						<label htmlFor="input-secretAccessKey" className="form-label">
+							{`Secret Access Key${isSetupS3Settings ? '' : ' (Optional)'}`}
+						</label>
 						<Field
-							type="text" id="input-secretAccessKey" name="secretAccessKey"
+							type="password" id="input-secretAccessKey" name="secretAccessKey"
 							className={classnames(
 								'form-control',
 								{'is-invalid': errors.secretAccessKey && isSubmitted},
@@ -73,6 +85,9 @@ module.exports = class S3Settings extends React.Component {
 								</div>
 							)
 						}
+						<div className="form-text">
+							{'Keep empty when you don\'t want to change it.'}
+						</div>
 					</div>
 					<div className="mb-3">
 						<label htmlFor="input-region" className="form-label">Region</label>
@@ -117,14 +132,19 @@ module.exports = class S3Settings extends React.Component {
 	};
 
 	render() {
-		const {validateUpdateS3SettingsForm} = this.validators;
+		const {
+			validateSetupS3SettingsForm,
+			validateUpdateS3SettingsForm,
+		} = this.validators;
+		const {settings} = this.state;
+		const isSetupS3Settings = !settings?.accessKeyId;
 
 		return (
 			<div className="row justify-content-center">
 				<div className="col-12 col-sm-10 col-md-8 col-lg-6 d-flex flex-column justify-content-center">
 					<Formik
-						initialValues={this.generateS3SettingsInitialValues()}
-						validate={validateUpdateS3SettingsForm}
+						initialValues={this.generateS3SettingsInitialValues(settings)}
+						validate={isSetupS3Settings ? validateSetupS3SettingsForm : validateUpdateS3SettingsForm}
 						onSubmit={this.onSubmitUpdateS3SettingsForm}
 					>
 						{this.renderCreateFolderForm}
