@@ -117,9 +117,13 @@ module.exports = class S3Settings extends Base {
 								</div>
 							)
 						}
-						<div className="form-text">
-							{'Keep empty when you don\'t want to change it.'}
-						</div>
+						{
+							!isSetupS3Settings && (
+								<div className="form-text">
+									{'Keep empty when you don\'t want to change it.'}
+								</div>
+							)
+						}
 					</div>
 					<div className="mb-3">
 						<label htmlFor="input-region" className="form-label">Region</label>
