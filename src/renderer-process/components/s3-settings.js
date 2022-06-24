@@ -14,6 +14,9 @@ const {
 } = require('../common/constants');
 const store = require('../common/store');
 const Base = require('./shared/base');
+const SuccessIcon = require('./shared/success-icon');
+
+const {api} = window;
 
 module.exports = class S3Settings extends Base {
 	constructor(props) {
@@ -22,7 +25,9 @@ module.exports = class S3Settings extends Base {
 			validateSetupS3SettingsForm: utils.makeFormikValidator(validateSetupS3SettingsForm),
 			validateUpdateS3SettingsForm: utils.makeFormikValidator(validateUpdateS3SettingsForm),
 		};
+		this.state.isApiProcessing = false;
 		this.state.settings = store.get(STORE_KEYS.SETTINGS);
+		this.state.isSubmitSuccess = false;
 	}
 
 	generateS3SettingsInitialValues(settings) {
@@ -34,12 +39,39 @@ module.exports = class S3Settings extends Base {
 		};
 	}
 
-	onSubmitUpdateS3SettingsForm(values) {
-		console.log({values});
-	}
+	onSubmitUpdateS3SettingsForm = async (values, {resetForm}) => {
+		try {
+			utils.addBusyClass();
+			this.setState({
+				isApiProcessing: true,
+				isSubmitSuccess: false,
+			});
+
+			const result = await api.send({
+				method: 'updateS3Settings',
+				data: {...values, secretAccessKey: values.secretAccessKey || undefined},
+			});
+			const nextSettings = {
+				...store.get(STORE_KEYS.SETTINGS),
+				...result,
+			};
+
+			store.set(STORE_KEYS.SETTINGS, nextSettings);
+			this.setState({
+				isSubmitSuccess: true,
+				settings: nextSettings,
+			});
+			resetForm({values: this.generateS3SettingsInitialValues(nextSettings)});
+		} finally {
+			utils.removeBusyClass();
+			this.setState({
+				isApiProcessing: false,
+			});
+		}
+	};
 
 	renderCreateFolderForm = ({errors, submitCount}) => {
-		const {settings} = this.state;
+		const {settings, isApiProcessing, isSubmitSuccess} = this.state;
 		const isSetupS3Settings = !settings?.accessKeyId;
 		const isSubmitted = submitCount > 0;
 
@@ -123,9 +155,12 @@ module.exports = class S3Settings extends Base {
 							)
 						}
 					</div>
-					<button type="submit" className="btn btn-outline-primary">
-						Save
-					</button>
+					<div className="d-flex align-items-center">
+						<button disabled={isApiProcessing} type="submit" className="btn btn-outline-primary">
+							Save
+						</button>
+						{isSubmitSuccess && <SuccessIcon className="ms-2"/>}
+					</div>
 				</div>
 			</Form>
 		);

@@ -18,6 +18,12 @@ const attributes = {
 		type: DataTypes.STRING,
 		allowNull: true,
 		get() {
+			const value = this.getDataValue('secretAccessKey');
+
+			if (value == null) {
+				return null;
+			}
+
 			return utils.decrypt({
 				value: Buffer.from(this.getDataValue('secretAccessKey'), 'base64'),
 				iv: Buffer.from(this.getDataValue('cryptoIv'), 'base64'),

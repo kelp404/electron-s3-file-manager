@@ -14,13 +14,13 @@ exports.getSettings = async () => {
 };
 
 exports.updateS3Settings = async ({accessKeyId, secretAccessKey, region, bucket}) => {
-	await SettingsModel.upsert(
+	const settings = await SettingsModel.upsert(
 		{
 			id: MAIN_SETTINGS_ID,
 			accessKeyId,
-			secretAccessKey,
 			region,
 			bucket,
+			...secretAccessKey ? {secretAccessKey} : {},
 		},
 		{
 			updateOnDuplicate: [
@@ -33,4 +33,6 @@ exports.updateS3Settings = async ({accessKeyId, secretAccessKey, region, bucket}
 			],
 		},
 	);
+
+	return settings[0].toJSON();
 };
