@@ -18,9 +18,7 @@ exports.subscribe = (key, handler) => {
  * @param {any} value
  * @returns {*}
  */
-exports.broadcast = (key, value) => {
-	return PubSub.publishSync(key, value);
-};
+exports.broadcast = (key, value) => PubSub.publishSync(key, value);
 
 /**
  * @param {string} key
