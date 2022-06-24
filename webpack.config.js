@@ -25,7 +25,7 @@ module.exports = () => {
 		},
 		output: {
 			path: path.join(__dirname, 'dist', 'renderer-process'),
-			filename: IS_DEVELOPMENT ? '[name].js' : '[name].[hash:8].js',
+			filename: '[name].js',
 		},
 		optimization: {
 			minimize: !IS_DEVELOPMENT,
@@ -75,8 +75,8 @@ module.exports = () => {
 		},
 		plugins: [
 			new MiniCssExtractPlugin({
-				filename: IS_DEVELOPMENT ? '[name].css' : '[name].[hash:8].css',
-				chunkFilename: IS_DEVELOPMENT ? '[name]-[id].css' : '[name]-[id].[hash:8].css',
+				filename: '[name].css',
+				chunkFilename: '[name]-[id].css',
 			}),
 			new HtmlWebpackPlugin({
 				chunks: ['renderer'],
