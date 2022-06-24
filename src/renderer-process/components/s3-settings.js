@@ -120,20 +120,18 @@ module.exports = class S3Settings extends React.Component {
 		const {validateUpdateS3SettingsForm} = this.validators;
 
 		return (
-			<div className="container-fluid">
-				<div className="row justify-content-center">
-					<div
-						className="col-12 col-sm-10 col-md-8 col-lg-6 d-flex flex-column justify-content-center"
-						style={{minHeight: '100vh'}}
+			<div className="row justify-content-center">
+				<div
+					className="col-12 col-sm-10 col-md-8 col-lg-6 d-flex flex-column justify-content-center"
+					style={{minHeight: 'calc(100vh - 60px)'}}
+				>
+					<Formik
+						initialValues={this.generateS3SettingsInitialValues()}
+						validate={validateUpdateS3SettingsForm}
+						onSubmit={this.onSubmitUpdateS3SettingsForm}
 					>
-						<Formik
-							initialValues={this.generateS3SettingsInitialValues()}
-							validate={validateUpdateS3SettingsForm}
-							onSubmit={this.onSubmitUpdateS3SettingsForm}
-						>
-							{this.renderCreateFolderForm}
-						</Formik>
-					</div>
+						{this.renderCreateFolderForm}
+					</Formik>
 				</div>
 			</div>
 		);
