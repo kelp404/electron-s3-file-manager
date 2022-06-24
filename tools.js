@@ -10,17 +10,31 @@ program
   Force sync database schema (drop tables then create).
     node tools.js sync
 
-	Build electron app.
-		node tools.js build`);
+  Remove database file.
+    node tools.js rmdb
+
+  Build electron app.
+    node tools.js build`);
 
 program
 	.command('sync')
 	.description('sync database schema');
 program
+	.command('rmdb')
+	.description('remove database');
+program
 	.command('build')
 	.description('build electron app');
 
 program.parse(process.argv);
+
+function removeDatabase() {
+	const {DATABASE_PATH} = require('./src/main-process/common/database');
+
+	console.log(`remove ${DATABASE_PATH}`);
+	fs.rmSync(DATABASE_PATH, {force: true});
+	return Promise.resolve();
+}
 
 async function sync() {
 	const {connectDatabase, DATABASE_PATH} = require('./src/main-process/common/database');
@@ -63,6 +77,10 @@ async function execute() {
 
 	if (args[0] === 'sync') {
 		return sync();
+	}
+
+	if (args[0] === 'rmdb') {
+		return removeDatabase();
 	}
 
 	if (args[0] === 'build') {
