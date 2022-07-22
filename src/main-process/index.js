@@ -7,6 +7,7 @@ const {
 const {
 	MAIN_API, GET_CONFIG,
 } = require('../shared/constants/ipc');
+const {MAIN_SETTINGS_ID} = require('../shared/constants/settings');
 const {connectDatabase, runMigrations} = require('./common/database');
 
 try {
@@ -67,6 +68,12 @@ ipcMain.handle(GET_CONFIG, () => ({
 
 app.whenReady().then(async () => {
 	await runMigrations();
+
+	const s3 = require('./common/s3');
+	const SettingsModel = require('./models/data/settings-model');
+	const settings = await SettingsModel.findOne({where: {id: MAIN_SETTINGS_ID}});
+
+	s3.updateSettings(settings);
 	ipcMain.handle(MAIN_API, generateIpcMainApiHandler());
 	createWindow();
 
