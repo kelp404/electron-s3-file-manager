@@ -14,7 +14,7 @@ exports.getSettings = async () => {
 	return settings.toJSON();
 };
 
-exports.updateS3Settings = async ({accessKeyId, secretAccessKey, region, bucket}) => {
+exports.updateS3Settings = async ({accessKeyId, secretAccessKey, region, bucket} = {}) => {
 	await SettingsModel.upsert(
 		{
 			id: MAIN_SETTINGS_ID,
