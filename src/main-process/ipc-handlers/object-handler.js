@@ -5,6 +5,13 @@ const {
 } = require('../../shared/errors');
 const ObjectModel = require('../models/data/object-model');
 
+/**
+ * @param {string} dirname
+ * @param {string} keyword
+ * @param {integer} after
+ * @param {integer} limit
+ * @returns {Promise<{hasNextPage: boolean, items: ObjectModel[]}>}
+ */
 exports.getObjects = async ({dirname = '', keyword, after, limit = 50} = {}) => {
 	const keywordConditions = [];
 	const afterConditions = [];

@@ -4,6 +4,9 @@ const {
 const SettingsModel = require('../models/data/settings-model');
 const s3 = require('../common/s3');
 
+/**
+ * @returns {Promise<null|SettingsModel>}
+ */
 exports.getSettings = async () => {
 	const settings = await SettingsModel.findOne({where: {id: MAIN_SETTINGS_ID}});
 
@@ -14,6 +17,13 @@ exports.getSettings = async () => {
 	return settings.toJSON();
 };
 
+/**
+ * @param {string} accessKeyId
+ * @param {string} secretAccessKey
+ * @param {string} region
+ * @param {string} bucket
+ * @returns {Promise<SettingsModel>}
+ */
 exports.updateS3Settings = async ({accessKeyId, secretAccessKey, region, bucket} = {}) => {
 	await SettingsModel.upsert(
 		{
