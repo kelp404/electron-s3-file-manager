@@ -180,7 +180,7 @@ module.exports = class S3Settings extends Base {
 
 		return (
 			<div className="row justify-content-center">
-				<div className="col-12 col-sm-10 col-md-8 col-lg-6 d-flex flex-column justify-content-center">
+				<div className="col-12 col-sm-10 col-md-8 col-lg-6 d-flex flex-column">
 					<Formik
 						initialValues={this.generateS3SettingsInitialValues(settings)}
 						validate={isSetupS3Settings ? validateSetupS3SettingsForm : validateUpdateS3SettingsForm}
