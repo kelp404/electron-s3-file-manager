@@ -7,6 +7,7 @@ const store = require('../common/store');
 const Base = require('./shared/base');
 const Loading = require('./shared/loading');
 const Navigation = require('./navigation');
+const Objects = require('./objects');
 const S3Settings = require('./s3-settings');
 
 const {api} = window;
@@ -15,9 +16,10 @@ module.exports = class Layout extends Base {
 	constructor(props) {
 		super(props);
 		this.state.currentNavigationTab = null;
+		this.state.objects = null;
 	}
 
-	componentDidMount() {
+	async componentDidMount() {
 		super.componentDidMount();
 		this.$listens.push(
 			store.subscribe(STORE_KEYS.CURRENT_NAVIGATION_TAB, (_, currentNavigationTab) => {
@@ -25,30 +27,42 @@ module.exports = class Layout extends Base {
 			}),
 		);
 
-		api.send({method: 'getSettings'})
-			.then(settings => {
-				store.set(STORE_KEYS.SETTINGS, settings);
-				store.set(
-					STORE_KEYS.CURRENT_NAVIGATION_TAB,
-					settings?.accessKeyId ? NAVIGATION_TABS.OBJECTS : NAVIGATION_TABS.SETTINGS,
-				);
+		const settings = await api.send({method: 'getSettings'});
+		const hasAccessKeyId = Boolean(settings?.accessKeyId);
+
+		store.set(STORE_KEYS.SETTINGS, settings);
+		store.set(
+			STORE_KEYS.CURRENT_NAVIGATION_TAB,
+			hasAccessKeyId ? NAVIGATION_TABS.OBJECTS : NAVIGATION_TABS.SETTINGS,
+		);
+
+		if (hasAccessKeyId) {
+			const objects = await api.send({
+				method: 'getObjects',
 			});
+
+			this.setState({objects});
+		}
 	}
 
 	renderContent() {
-		const {currentNavigationTab} = this.state;
+		const {currentNavigationTab, objects} = this.state;
 
 		if (currentNavigationTab === NAVIGATION_TABS.SETTINGS) {
 			return <S3Settings/>;
 		}
 
-		return (
-			<div className="row">
-				<div className="col-12 d-flex flex-column justify-content-center">
-					<Loading/>
+		if (objects == null) {
+			return (
+				<div className="row">
+					<div className="col-12 d-flex flex-column justify-content-center">
+						<Loading/>
+					</div>
 				</div>
-			</div>
-		);
+			);
+		}
+
+		return <Objects objects={objects}/>;
 	}
 
 	render() {

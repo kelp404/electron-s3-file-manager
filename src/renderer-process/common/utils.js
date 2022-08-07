@@ -35,3 +35,24 @@ exports.loadStylesheet = href => new Promise((resolve, reject) => {
 
 	document.head.append(link);
 });
+
+/**
+ * Generate a date prop types for React.Component.
+ * @param {boolean} isRequired - Is this field required?
+ * @returns {function(props: Object, propName: string, componentName: string, location: string, propFullName: string)} - The prop types handler.
+ */
+exports.generateDatePropTypes = ({isRequired}) => (props, propName, componentName, location, propFullName) => {
+	const value = props[propName];
+
+	if (isRequired && (value == null || value === '')) {
+		return new Error(
+			`The prop "${propFullName}" is marked as required in "${componentName}", but its value is "${value}".`,
+		);
+	}
+
+	if (value && Number.isNaN((new Date(value)).getTime())) {
+		return new Error(
+			`Invalid prop "${propFullName}" supplied to "${componentName}", expected "ISO String".`,
+		);
+	}
+};
