@@ -28,6 +28,7 @@ module.exports = class S3Settings extends Base {
 
 		const settings = store.get(STORE_KEYS.SETTINGS);
 
+		this.state.keyword = '';
 		this.state.breadcrumb = {
 			items: [
 				{
@@ -39,8 +40,17 @@ module.exports = class S3Settings extends Base {
 		};
 	}
 
+	onClickSearchButton = event => {
+		event.preventDefault();
+		// Todo: search objects
+	};
+
+	onChangeKeyword = event => {
+		this.setState({keyword: event.target.value});
+	};
+
 	render() {
-		const {breadcrumb} = this.state;
+		const {breadcrumb, keyword} = this.state;
 
 		return (
 			<div className="row">
@@ -60,6 +70,28 @@ module.exports = class S3Settings extends Base {
 								}
 							</ol>
 						</nav>
+
+						{/* Search form */}
+						<form className="form-row align-items-center">
+							<div className="col-auto my-1">
+								<div className="input-group">
+									<input
+										type="text"
+										className="form-control border-secondary"
+										placeholder="Name"
+										value={keyword}
+										onChange={this.onChangeKeyword}
+									/>
+									<button
+										className="btn btn-outline-secondary"
+										type="submit"
+										onClick={this.onClickSearchButton}
+									>
+										Search
+									</button>
+								</div>
+							</div>
+						</form>
 					</div>
 				</div>
 			</div>
