@@ -1,3 +1,6 @@
+const dayjs = require('dayjs');
+const filesize = require('filesize');
+
 /**
  * Convert the fastest-validator validate function for Formik.
  * @param {function} checkFunction
@@ -56,3 +59,30 @@ exports.generateDatePropTypes = ({isRequired}) => (props, propName, componentNam
 		);
 	}
 };
+
+/**
+ * Format date.
+ * @param {string|number|Date} date
+ * @returns {string} eg: "April 7, 2019 7:59:03 PM"
+ */
+exports.formatDate = date => {
+	const parsedDate = dayjs(date);
+
+	return `${parsedDate.format('LL')} ${parsedDate.format('LTS')}`;
+};
+
+/**
+ * 1000 -> 1,000
+ * @param {string|number|null} value - The number.
+ * @returns {string}
+ */
+exports.formatNumber = value => {
+	if (value == null) {
+		return '';
+	}
+
+	return `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+};
+
+exports.formatSize = value =>
+	filesize(value, {base: 2, round: 1, standard: 'jedec', symbols: {KB: 'kB'}});

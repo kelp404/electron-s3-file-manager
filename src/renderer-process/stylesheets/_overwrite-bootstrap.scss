@@ -1,3 +1,16 @@
+a:not(.nav-link), .btn-link {
+  text-decoration: none;
+
+  &:hover, &.active, &:focus {
+    text-decoration: underline;
+  }
+}
+a {
+  &.btn, &.active, &:hover, &:focus {
+    text-decoration: none !important;
+  }
+}
+
 .nav {
   background-color: $body-bg;
   opacity: 0.97;
