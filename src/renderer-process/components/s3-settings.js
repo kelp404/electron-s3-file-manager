@@ -25,7 +25,7 @@ module.exports = class S3Settings extends Base {
 			validateSetupS3SettingsForm: utils.makeFormikValidator(validateSetupS3SettingsForm),
 			validateUpdateS3SettingsForm: utils.makeFormikValidator(validateUpdateS3SettingsForm),
 		};
-		this.state.isApiProcessing = false;
+		this.state.requestPool = new Set();
 		this.state.settings = store.get(STORE_KEYS.SETTINGS);
 		this.state.isSubmitSuccess = false;
 	}
@@ -40,12 +40,14 @@ module.exports = class S3Settings extends Base {
 	}
 
 	onSubmitUpdateS3SettingsForm = async (values, {resetForm}) => {
+		const requestId = Math.random().toString(36);
+
 		try {
 			utils.addBusyClass();
-			this.setState({
-				isApiProcessing: true,
+			this.setState(prevState => ({
+				requestPool: new Set([...prevState.requestPool, requestId]),
 				isSubmitSuccess: false,
-			});
+			}));
 
 			const result = await api.send({
 				method: 'updateS3Settings',
@@ -64,16 +66,18 @@ module.exports = class S3Settings extends Base {
 			resetForm({values: this.generateS3SettingsInitialValues(nextSettings)});
 		} finally {
 			utils.removeBusyClass();
-			this.setState({
-				isApiProcessing: false,
+			this.setState(prevState => {
+				prevState.requestPool.delete(requestId);
+				return {requestPool: new Set(prevState.requestPool)};
 			});
 		}
 	};
 
 	renderCreateFolderForm = ({errors, submitCount}) => {
-		const {settings, isApiProcessing, isSubmitSuccess} = this.state;
+		const {settings, requestPool, isSubmitSuccess} = this.state;
 		const isSetupS3Settings = !settings?.accessKeyId;
 		const isSubmitted = submitCount > 0;
+		const isApiProcessing = requestPool.size > 0;
 
 		return (
 			<Form className="card">
