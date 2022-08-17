@@ -16,7 +16,7 @@ const store = require('../common/store');
 const Base = require('./shared/base');
 const SuccessIcon = require('./shared/success-icon');
 
-const {api} = window;
+const {api, dialog} = window;
 
 module.exports = class S3Settings extends Base {
 	constructor(props) {
@@ -64,6 +64,8 @@ module.exports = class S3Settings extends Base {
 				settings: nextSettings,
 			});
 			resetForm({values: this.generateS3SettingsInitialValues(nextSettings)});
+		} catch (error) {
+			dialog.showErrorBox('Error', `${error}`);
 		} finally {
 			utils.removeBusyClass();
 			this.setState(prevState => {

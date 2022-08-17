@@ -1,11 +1,11 @@
 const path = require('path');
-const {app, BrowserWindow, ipcMain, nativeTheme} = require('electron');
+const {app, BrowserWindow, ipcMain, nativeTheme, dialog} = require('electron');
 const isDev = require('electron-is-dev');
 const {
 	BadRequestError,
 } = require('../shared/errors');
 const {
-	MAIN_API, GET_CONFIG,
+	MAIN_API, GET_CONFIG, SHOW_ERROR_BOX,
 } = require('../shared/constants/ipc');
 const {MAIN_SETTINGS_ID} = require('../shared/constants/settings');
 const {connectDatabase, runMigrations} = require('./common/database');
@@ -65,6 +65,9 @@ function generateIpcMainApiHandler() {
 ipcMain.handle(GET_CONFIG, () => ({
 	shouldUseDarkColors: nativeTheme.shouldUseDarkColors,
 }));
+ipcMain.handle(SHOW_ERROR_BOX, (event, [title, content]) => {
+	dialog.showErrorBox(title, content);
+});
 
 app.whenReady().then(async () => {
 	await runMigrations();
