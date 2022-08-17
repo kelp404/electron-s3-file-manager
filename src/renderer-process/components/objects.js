@@ -174,6 +174,27 @@ module.exports = class S3Settings extends Base {
 	};
 
 	onLoadNextPage = async () => {
+		const {dirname, keyword, objectTable} = this.state;
+
+		try {
+			const result = await api.send({
+				method: 'getObjects',
+				data: {
+					dirname,
+					keyword,
+					after: objectTable.items.slice(-1)[0].id,
+				},
+			});
+
+			this.setState({
+				objectTable: {
+					...result,
+					items: [...objectTable.items, ...result.items],
+				},
+			});
+		} catch (error) {
+			dialog.showErrorBox('Error', `${error}`);
+		}
 	};
 
 	objectsHeaderComponent = (
