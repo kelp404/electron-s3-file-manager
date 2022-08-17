@@ -9,6 +9,10 @@ a {
   &.btn, &.active, &:hover, &:focus {
     text-decoration: none !important;
   }
+  &.disabled {
+    opacity: 0.8;
+    pointer-events: none;
+  }
 }
 
 .nav {

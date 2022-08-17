@@ -1,3 +1,4 @@
+const classnames = require('classnames');
 const PropTypes = require('prop-types');
 const React = require('react');
 const InfiniteScroll = require('@kelp404/react-infinite-scroller');
@@ -8,6 +9,8 @@ const store = require('../common/store');
 const {STORE_KEYS} = require('../common/constants');
 const Base = require('./shared/base');
 const Loading = require('./shared/loading');
+
+const {api, dialog} = window;
 
 module.exports = class S3Settings extends Base {
 	static propTypes = {
@@ -30,21 +33,75 @@ module.exports = class S3Settings extends Base {
 
 		const settings = store.get(STORE_KEYS.SETTINGS);
 
-		this.state.requestPool = new Set();
+		// Query arguments
 		this.state.dirname = '';
 		this.state.keyword = '';
+
+		this.state.requestPool = new Set();
 		this.state.breadcrumb = {
 			items: [
 				{
 					id: Math.random().toString(36),
 					title: settings.bucket,
-					urlParams: {dirname: null},
+					dirname: '',
+					basename: '',
 				},
 			],
 		};
 		this.state.checked = Object.fromEntries(props.objects.items.map(({id}) => [id, false]));
 		this.state.objectTable = {...props.objects, items: [null, ...props.objects.items]};
 	}
+
+	updateQueryArguments = async ({dirname, keyword}) => {
+		const settings = store.get(STORE_KEYS.SETTINGS);
+		const requestId = Math.random().toString(36);
+
+		try {
+			utils.addBusyClass();
+			this.setState(prevState => ({
+				requestPool: new Set([...prevState.requestPool, requestId]),
+			}));
+
+			const result = await api.send({
+				method: 'getObjects',
+				data: {dirname, keyword},
+			});
+			const folders = (dirname || null)?.split('/') || [];
+
+			this.setState({
+				dirname,
+				keyword,
+				breadcrumb: {
+					items: [
+						{
+							id: Math.random().toString(36),
+							title: settings.bucket,
+							dirname: '',
+							basename: '',
+						},
+						...folders.map((folder, index) => ({
+							id: Math.random().toString(36),
+							title: folder,
+							dirname: index >= 1 ? folders.slice(0, index).join('/') : '',
+							basename: folder,
+						})),
+					],
+				},
+				objectTable: {
+					...result,
+					items: [null, ...result.items],
+				},
+			});
+		} catch (error) {
+			dialog.showErrorBox('Error', `${error}`);
+		} finally {
+			utils.removeBusyClass();
+			this.setState(prevState => {
+				prevState.requestPool.delete(requestId);
+				return {requestPool: new Set(prevState.requestPool)};
+			});
+		}
+	};
 
 	hasAnyChecked = () => {
 		const {checked} = this.state;
@@ -104,6 +161,16 @@ module.exports = class S3Settings extends Base {
 		event.preventDefault();
 	};
 
+	onClickFolderObjectLink = event => {
+		const {objectDirname, objectBasename} = event.target.dataset;
+		const dirname = (objectDirname || null)
+			? `${objectDirname}/${objectBasename}`
+			: objectBasename;
+
+		event.preventDefault();
+		this.updateQueryArguments({dirname, keyword: ''});
+	};
+
 	onLoadNextPage = async () => {
 	};
 
@@ -138,7 +205,8 @@ module.exports = class S3Settings extends Base {
 	);
 
 	renderObjectRow = object => {
-		const {checked, dirname} = this.state;
+		const {checked, dirname, requestPool} = this.state;
+		const isApiProcessing = requestPool.size > 0;
 		let name = dirname
 			? object.path.replace(`${dirname}/`, '')
 			: object.path;
@@ -169,7 +237,25 @@ module.exports = class S3Settings extends Base {
 					}
 				</div>
 				<div className="flex-grow-1 px-1 text-truncate">
-					<a href="#">{name}</a>
+					{
+						object.type === OBJECT_TYPE.FOLDER && (
+							<a
+								data-object-id={object.id}
+								data-object-dirname={object.dirname}
+								data-object-basename={object.basename}
+								href={`#${object.id}`}
+								className={classnames({disabled: isApiProcessing})}
+								onClick={this.onClickFolderObjectLink}
+							>
+								{name}
+							</a>
+						)
+					}
+					{
+						object.type === OBJECT_TYPE.FILE && (
+							<a href="#">{name}</a>
+						)
+					}
 				</div>
 				<div className="d-none d-lg-block text-truncate" style={{minWidth: '200px'}}>
 					{object.storageClass || '-'}
@@ -199,7 +285,13 @@ module.exports = class S3Settings extends Base {
 								{
 									breadcrumb.items.map(item => (
 										<li key={item.id} className="breadcrumb-item">
-											<a href="#">
+											<a
+												data-object-dirname={item.dirname}
+												data-object-basename={item.basename}
+												href={`#${item.id}`}
+												className={classnames({disabled: isApiProcessing})}
+												onClick={this.onClickFolderObjectLink}
+											>
 												{item.title}
 											</a>
 										</li>
