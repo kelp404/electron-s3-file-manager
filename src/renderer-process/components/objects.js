@@ -136,13 +136,15 @@ module.exports = class S3Settings extends Base {
 		}));
 	};
 
-	onClickSearchButton = event => {
-		event.preventDefault();
-		// Todo: search objects
-	};
-
 	onChangeKeyword = event => {
 		this.setState({keyword: event.target.value});
+	};
+
+	onClickSearchButton = event => {
+		const {dirname, keyword} = this.state;
+
+		event.preventDefault();
+		this.updateQueryArguments({dirname, keyword});
 	};
 
 	onClickDeleteObjectsButton = event => {
@@ -190,7 +192,7 @@ module.exports = class S3Settings extends Base {
 			<div className="px-1 text-truncate" style={{minWidth: '270px'}}>
 				<strong>Last modified</strong>
 			</div>
-			<div className="ps-1" style={{minWidth: '86px'}}>
+			<div className="ps-1 text-end" style={{minWidth: '86px'}}>
 				<strong>Size</strong>
 			</div>
 		</li>
