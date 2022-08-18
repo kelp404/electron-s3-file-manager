@@ -21,27 +21,36 @@ module.exports = class Layout extends Base {
 
 	async componentDidMount() {
 		super.componentDidMount();
-		this.$listens.push(
-			store.subscribe(STORE_KEYS.CURRENT_NAVIGATION_TAB, (_, currentNavigationTab) => {
-				this.setState({currentNavigationTab});
-			}),
-		);
 
 		const settings = await api.send({method: 'getSettings'});
 		const hasAccessKeyId = Boolean(settings?.accessKeyId);
+		const currentNavigationTab = hasAccessKeyId ? NAVIGATION_TABS.OBJECTS : NAVIGATION_TABS.SETTINGS;
 
 		store.set(STORE_KEYS.SETTINGS, settings);
-		store.set(
-			STORE_KEYS.CURRENT_NAVIGATION_TAB,
-			hasAccessKeyId ? NAVIGATION_TABS.OBJECTS : NAVIGATION_TABS.SETTINGS,
+		store.set(STORE_KEYS.CURRENT_NAVIGATION_TAB, currentNavigationTab);
+		this.setState({currentNavigationTab});
+		this.$listens.push(
+			store.subscribe(STORE_KEYS.CURRENT_NAVIGATION_TAB, async (_, currentNavigationTab) => {
+				let objects;
+
+				if (currentNavigationTab === NAVIGATION_TABS.OBJECTS) {
+					if (store.get(STORE_KEYS.SETTINGS)?.accessKeyId) {
+						objects = await api.send({method: 'getObjects'});
+					} else {
+						objects = {hasNextPage: false, items: []};
+					}
+				}
+
+				this.setState({currentNavigationTab, objects});
+			}),
 		);
 
 		if (hasAccessKeyId) {
-			const objects = await api.send({
-				method: 'getObjects',
-			});
+			const objects = await api.send({method: 'getObjects'});
 
 			this.setState({objects});
+		} else {
+			this.setState({objects: {hasNextPage: false, items: []}});
 		}
 	}
 
