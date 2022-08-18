@@ -2359,13 +2359,13 @@ iframe {
     --bs-aspect-ratio: 100%;
 }
 .ratio-4x3 {
-    --bs-aspect-ratio: calc(3 / 4 * 100%);
+    --bs-aspect-ratio: 75%;
 }
 .ratio-16x9 {
-    --bs-aspect-ratio: calc(9 / 16 * 100%);
+    --bs-aspect-ratio: 56.25%;
 }
 .ratio-21x9 {
-    --bs-aspect-ratio: calc(9 / 21 * 100%);
+    --bs-aspect-ratio: 42.8571%;
 }
 .visually-hidden,
 .visually-hidden-focusable:not(:focus):not(:focus-within) {
@@ -2590,6 +2590,266 @@ iframe {
 .bg-gradient {
     background-image: var(--darkreader-bgimg--bs-gradient) !important;
 }
+a:not(.nav-link),
+.btn-link {
+    text-decoration-color: initial;
+}
+a:not(.nav-link):hover,
+a:not(.nav-link).active,
+a:not(.nav-link):focus,
+.btn-link:hover,
+.btn-link.active,
+.btn-link:focus {
+    text-decoration-color: initial;
+}
+a.btn,
+a.active,
+a:hover,
+a:focus {
+    text-decoration-color: initial !important;
+}
 .nav {
     background-color: rgb(36, 37, 37);
+}
+.swal2-popup.swal2-toast {
+    background-image: initial;
+    background-color: rgb(36, 37, 37);
+    box-shadow: rgba(13, 13, 13, 0.07) 0px 0px 1px,
+    rgba(13, 13, 13, 0.07) 0px 1px 2px,
+    rgba(13, 13, 13, 0.07) 1px 2px 4px,
+    rgba(13, 13, 13, 0.07) 1px 3px 8px,
+    rgba(13, 13, 13, 0.07) 2px 4px 16px;
+}
+.swal2-popup.swal2-toast .swal2-success {
+    border-color: rgb(75, 116, 47);
+}
+.swal2-container.swal2-backdrop-show,
+.swal2-container.swal2-noanimation {
+    background-image: initial;
+    background-color: rgba(13, 13, 13, 0.4);
+}
+.swal2-container.swal2-backdrop-hide {
+    background-image: initial !important;
+    background-color: transparent !important;
+}
+.swal2-popup {
+    border-color: initial;
+    background-image: initial;
+    background-color: rgb(36, 37, 37);
+    color: rgb(179, 171, 158);
+}
+.swal2-popup:focus {
+    outline-color: initial;
+}
+.swal2-title {
+    color: inherit;
+}
+.swal2-actions:not(.swal2-loading) .swal2-styled:hover {
+    background-image: linear-gradient(rgba(13, 13, 13, 0.1),
+    rgba(13, 13, 13, 0.1));
+}
+.swal2-actions:not(.swal2-loading) .swal2-styled:active {
+    background-image: linear-gradient(rgba(13, 13, 13, 0.2),
+    rgba(13, 13, 13, 0.2));
+}
+.swal2-loader {
+    border-color: rgb(49, 98, 145) transparent;
+}
+.swal2-styled {
+    box-shadow: rgba(13, 13, 13, 0) 0px 0px 0px 3px;
+}
+.swal2-styled.swal2-confirm {
+    border-color: initial;
+    background-image: initial;
+    background-color: rgb(48, 40, 125);
+    color: rgb(229, 224, 216);
+}
+.swal2-styled.swal2-confirm:focus {
+    box-shadow: rgba(48, 40, 125, 0.5) 0px 0px 0px 3px;
+}
+.swal2-styled.swal2-deny {
+    border-color: initial;
+    background-image: initial;
+    background-color: rgb(154, 44, 48);
+    color: rgb(229, 224, 216);
+}
+.swal2-styled.swal2-deny:focus {
+    box-shadow: rgba(154, 44, 48, 0.5) 0px 0px 0px 3px;
+}
+.swal2-styled.swal2-cancel {
+    border-color: initial;
+    background-image: initial;
+    background-color: rgb(98, 102, 103);
+    color: rgb(229, 224, 216);
+}
+.swal2-styled.swal2-cancel:focus {
+    box-shadow: rgba(98, 102, 103, 0.5) 0px 0px 0px 3px;
+}
+.swal2-styled.swal2-default-outline:focus {
+    box-shadow: rgba(60, 94, 126, 0.5) 0px 0px 0px 3px;
+}
+.swal2-styled:focus {
+    outline-color: initial;
+}
+.swal2-footer {
+    border-top-color: rgb(63, 65, 65);
+    color: inherit;
+}
+.swal2-timer-progress-bar {
+    background-image: initial;
+    background-color: rgba(13, 13, 13, 0.2);
+}
+.swal2-close {
+    border-color: initial;
+    background-image: initial;
+    background-color: transparent;
+    color: rgb(199, 192, 181);
+}
+.swal2-close:hover {
+    background-image: initial;
+    background-color: transparent;
+    color: rgb(227, 119, 115);
+}
+.swal2-close:focus {
+    outline-color: initial;
+    box-shadow: rgba(60, 94, 126, 0.5) 0px 0px 0px 3px inset;
+}
+.swal2-html-container {
+    color: inherit;
+}
+.swal2-input,
+.swal2-file,
+.swal2-textarea {
+    border-color: rgb(69, 72, 71);
+    background-image: initial;
+    background-color: transparent;
+    box-shadow: rgba(13, 13, 13, 0.06) 0px 1px 1px inset,
+    rgba(13, 13, 13, 0) 0px 0px 0px 3px;
+    color: inherit;
+}
+.swal2-input.swal2-inputerror,
+.swal2-file.swal2-inputerror,
+.swal2-textarea.swal2-inputerror {
+    border-color: rgb(128, 29, 27) !important;
+    box-shadow: rgb(124, 28, 26) 0px 0px 2px !important;
+}
+.swal2-input:focus,
+.swal2-file:focus,
+.swal2-textarea:focus {
+    border-color: rgb(42, 85, 103);
+    outline-color: initial;
+    box-shadow: rgba(13, 13, 13, 0.06) 0px 1px 1px inset,
+    rgba(60, 94, 126, 0.5) 0px 0px 0px 3px;
+}
+.swal2-input::placeholder,
+.swal2-file::placeholder,
+.swal2-textarea::placeholder {
+    color: rgb(199, 192, 181);
+}
+.swal2-range {
+    background-image: initial;
+    background-color: rgb(36, 37, 37);
+}
+.swal2-range output {
+    color: inherit;
+}
+.swal2-file {
+    background-image: initial;
+    background-color: transparent;
+}
+.swal2-select {
+    background-image: initial;
+    background-color: transparent;
+    color: inherit;
+}
+.swal2-radio,
+.swal2-checkbox {
+    background-image: initial;
+    background-color: rgb(36, 37, 37);
+    color: inherit;
+}
+.swal2-validation-message {
+    background-image: initial;
+    background-color: rgb(43, 45, 46);
+    color: rgb(169, 160, 147);
+}
+.swal2-validation-message::before {
+    background-color: rgb(124, 28, 26);
+    color: rgb(229, 224, 216);
+}
+.swal2-icon {
+    border-color: rgb(143, 132, 117);
+}
+.swal2-icon.swal2-error {
+    border-color: rgb(128, 29, 27);
+    color: rgb(227, 119, 115);
+}
+.swal2-icon.swal2-error [class^="swal2-x-mark-line"] {
+    background-color: rgb(124, 28, 26);
+}
+.swal2-icon.swal2-warning {
+    border-color: rgb(122, 70, 24);
+    color: rgb(237, 180, 128);
+}
+.swal2-icon.swal2-info {
+    border-color: rgb(31, 98, 119);
+    color: rgb(94, 192, 220);
+}
+.swal2-icon.swal2-question {
+    border-color: rgb(58, 78, 85);
+    color: rgb(145, 173, 181);
+}
+.swal2-icon.swal2-success {
+    border-color: rgb(75, 116, 47);
+    color: rgb(168, 211, 135);
+}
+.swal2-icon.swal2-success .swal2-success-ring {
+    border-color: rgba(75, 116, 47, 0.3);
+}
+.swal2-icon.swal2-success [class^="swal2-success-line"] {
+    background-color: rgb(84, 113, 46);
+}
+.swal2-progress-steps {
+    background-image: initial;
+    background-color: transparent;
+}
+.swal2-progress-steps .swal2-progress-step {
+    background-image: initial;
+    background-color: rgb(49, 100, 147);
+    color: rgb(229, 224, 216);
+}
+.swal2-progress-steps .swal2-progress-step.swal2-active-progress-step {
+    background-image: initial;
+    background-color: rgb(49, 100, 147);
+}
+.swal2-progress-steps .swal2-progress-step.swal2-active-progress-step ~ .swal2-progress-step {
+    background-image: initial;
+    background-color: rgb(43, 79, 89);
+    color: rgb(229, 224, 216);
+}
+.swal2-progress-steps .swal2-progress-step.swal2-active-progress-step ~ .swal2-progress-step-line {
+    background-image: initial;
+    background-color: rgb(43, 79, 89);
+}
+.swal2-progress-steps .swal2-progress-step-line {
+    background-image: initial;
+    background-color: rgb(49, 100, 147);
+}
+[class^="swal2"] {
+    -webkit-tap-highlight-color: transparent;
+}
+.swal2-no-war {
+    background-image: initial;
+    background-color: rgb(38, 39, 43);
+    color: rgb(229, 224, 216);
+}
+.swal2-no-war a {
+    color: rgb(113, 209, 232);
+    text-decoration-color: initial;
+}
+.swal2-no-war a:hover {
+    text-decoration-color: initial;
+}
+.objects-wrapper .object-row:hover {
+    background-color: rgb(46, 48, 47);
 }

@@ -4,7 +4,10 @@ A GUI AWS S3 file manager. It supports keyword search, download, upload and prev
 
 ## Development
 ### Generate dark theme stylesheet
-Disable dark model then add darkreader into `renderer-process/index.js`.
+#### 1. Disable dark mode.
+Remove `utils.loadStylesheet('dark-theme.css');` at `render-process/index.js`.
+
+#### 2. Add darkreader at `renderer-process/index.js`.
 ```js
 const darkreader = require('darkreader');
 
