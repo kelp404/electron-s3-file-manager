@@ -12,7 +12,7 @@ const Loading = require('./shared/loading');
 
 const {api, dialog} = window;
 
-module.exports = class S3Settings extends Base {
+module.exports = class Objects extends Base {
 	static propTypes = {
 		objects: PropTypes.shape({
 			items: PropTypes.arrayOf(PropTypes.shape({
