@@ -1,4 +1,5 @@
 const {Op} = require('sequelize');
+const s3 = require('../common/s3');
 const utils = require('../common/utils');
 const {
 	NotFoundError,
@@ -78,4 +79,22 @@ exports.getObjects = async ({dirname = '', keyword, after, limit = 50} = {}) => 
 		hasNextPage: objects.length > limit,
 		items: objects.slice(0, limit).map(object => object.toJSON()),
 	};
+};
+
+/**
+ * @param {number} id
+ * @returns {Promise<ObjectModel>}
+ */
+exports.getObject = async ({id} = {}) => {
+	const object = await ObjectModel.findOne({where: {id}});
+
+	if (!object) {
+		throw new NotFoundError();
+	}
+
+	const headers = await s3.headObject(object.path);
+	const result = object.toJSON();
+
+	result.objectHeaders = headers;
+	return result;
 };
