@@ -68,6 +68,24 @@ select:-webkit-autofill {
 }
 
 /* Modified CSS */
+.fa-border {
+    border-color: var(--darkreader-border--fa-border-color, #3f4141);
+}
+.fa-spin-reverse {
+    --fa-animation-direction: reverse;
+}
+.fa-inverse {
+    color: var(--darkreader-text--fa-inverse, #e5e0d8);
+}
+:root, :host {
+    --fa-font-brands: normal 400 1em/1 "Font Awesome 6 Brands";
+}
+:root, :host {
+    --fa-font-regular: normal 400 1em/1 "Font Awesome 6 Free";
+}
+:root, :host {
+    --fa-font-solid: normal 900 1em/1 "Font Awesome 6 Free";
+}
 :root {
     --bs-blue: #0d6efd; --bs-indigo: #6610f2; --bs-purple: #6f42c1; --bs-pink: #d63384; --bs-red: #dc3545; --bs-orange: #fd7e14; --bs-yellow: #ffc107; --bs-green: #198754; --bs-teal: #20c997; --bs-cyan: #0dcaf0; --bs-white: #fff; --bs-gray: #6c757d; --bs-gray-dark: #343a40; --bs-gray-100: #f8f9fa; --bs-gray-200: #e9ecef; --bs-gray-300: #dee2e6; --bs-gray-400: #ced4da; --bs-gray-500: #adb5bd; --bs-gray-600: #6c757d; --bs-gray-700: #495057; --bs-gray-800: #343a40; --bs-gray-900: #212529; --bs-primary: #0d6efd; --bs-secondary: #6c757d; --bs-success: #198754; --bs-info: #0dcaf0; --bs-warning: #ffc107; --bs-danger: #dc3545; --bs-light: #f8f9fa; --bs-dark: #212529; --darkreader-bg--bs-primary-rgb: 24, 86, 178; --darkreader-text--bs-primary-rgb: 57, 147, 229; --darkreader-bg--bs-secondary-rgb: 96, 100, 101; --darkreader-text--bs-secondary-rgb: 159, 151, 136; --darkreader-bg--bs-success-rgb: 39, 109, 73; --darkreader-text--bs-success-rgb: 131, 220, 173; --darkreader-bg--bs-info-rgb: 36, 157, 178; --darkreader-text--bs-info-rgb: 65, 200, 223; --darkreader-bg--bs-warning-rgb: 148, 115, 22; --darkreader-text--bs-warning-rgb: 243, 195, 53; --darkreader-bg--bs-danger-rgb: 155, 44, 53; --darkreader-text--bs-danger-rgb: 208, 82, 91; --darkreader-bg--bs-light-rgb: 39, 40, 40; --darkreader-text--bs-light-rgb: 225, 221, 212; --darkreader-bg--bs-dark-rgb: 39, 41, 40; --darkreader-text--bs-dark-rgb: 207, 201, 191; --darkreader-bg--bs-white-rgb: 36, 37, 37; --darkreader-text--bs-white-rgb: 229, 224, 216; --darkreader-bg--bs-black-rgb: 13, 13, 13; --darkreader-text--bs-black-rgb: 229, 224, 216; --darkreader-text--bs-body-color-rgb: 207, 201, 191; --darkreader-bg--bs-body-bg-rgb: 36, 37, 37; --bs-font-sans-serif: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"; --bs-font-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New",
     monospace;
