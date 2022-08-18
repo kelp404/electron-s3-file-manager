@@ -49,7 +49,7 @@ module.exports = class Objects extends Base {
 			],
 		};
 		this.state.checked = Object.fromEntries(props.objects.items.map(({id}) => [id, false]));
-		this.state.objectTable = {...props.objects, items: [null, ...props.objects.items]};
+		this.state.objects = {...props.objects, items: [null, ...props.objects.items]};
 	}
 
 	updateQueryArguments = async ({dirname, keyword}) => {
@@ -87,7 +87,7 @@ module.exports = class Objects extends Base {
 						})),
 					],
 				},
-				objectTable: {
+				objects: {
 					...result,
 					items: [null, ...result.items],
 				},
@@ -116,11 +116,11 @@ module.exports = class Objects extends Base {
 	};
 
 	onChangeCheckAll = event => {
-		const {objectTable} = this.state;
+		const {objects} = this.state;
 
 		this.setState({
 			checked: Object.fromEntries(
-				objectTable.items.slice(1).map(object => [object.id, Boolean(event.target.checked)]),
+				objects.items.slice(1).map(object => [object.id, Boolean(event.target.checked)]),
 			),
 		});
 	};
@@ -174,7 +174,7 @@ module.exports = class Objects extends Base {
 	};
 
 	onLoadNextPage = async () => {
-		const {dirname, keyword, objectTable} = this.state;
+		const {dirname, keyword, objects} = this.state;
 
 		try {
 			const result = await api.send({
@@ -182,14 +182,14 @@ module.exports = class Objects extends Base {
 				data: {
 					dirname,
 					keyword,
-					after: objectTable.items.slice(-1)[0].id,
+					after: objects.items.slice(-1)[0].id,
 				},
 			});
 
 			this.setState({
-				objectTable: {
+				objects: {
 					...result,
-					items: [...objectTable.items, ...result.items],
+					items: [...objects.items, ...result.items],
 				},
 			});
 		} catch (error) {
@@ -294,7 +294,7 @@ module.exports = class Objects extends Base {
 	};
 
 	render() {
-		const {breadcrumb, keyword, requestPool, objectTable} = this.state;
+		const {breadcrumb, keyword, requestPool, objects} = this.state;
 		const isApiProcessing = requestPool.size > 0;
 		const hasAnyChecked = this.hasAnyChecked();
 
@@ -391,7 +391,7 @@ module.exports = class Objects extends Base {
 						</div>
 
 						{
-							objectTable.items.length === 1 && (
+							objects.items.length === 1 && (
 								<ul className="objects-wrapper list-group list-group-flush">
 									{this.objectsHeaderComponent}
 									{this.emptyObjectRowComponent}
@@ -399,17 +399,17 @@ module.exports = class Objects extends Base {
 							)
 						}
 						{
-							objectTable.items.length > 1 && (
+							objects.items.length > 1 && (
 								<InfiniteScroll
 									element="ul"
 									className="objects-wrapper list-group list-group-flush"
 									pageStart={0}
 									loadMore={this.onLoadNextPage}
-									hasMore={objectTable.hasNextPage}
+									hasMore={objects.hasNextPage}
 									loader={this.infiniteScrollLoadingComponent}
 								>
 									{this.objectsHeaderComponent}
-									{objectTable.items.slice(1).map(object => this.renderObjectRow(object))}
+									{objects.items.slice(1).map(object => this.renderObjectRow(object))}
 								</InfiniteScroll>
 							)
 						}
