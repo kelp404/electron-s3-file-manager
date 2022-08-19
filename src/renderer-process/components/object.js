@@ -14,6 +14,7 @@ module.exports = class ObjectComponent extends Base {
 			storageClass: PropTypes.string.isRequired,
 			lastModified: PropTypes.instanceOf(Date).isRequired,
 			objectHeaders: PropTypes.object.isRequired,
+			url: PropTypes.string,
 		}).isRequired,
 	};
 
