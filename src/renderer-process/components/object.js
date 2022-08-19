@@ -35,6 +35,32 @@ module.exports = class ObjectComponent extends Base {
 		event.preventDefault();
 	};
 
+	renderPreview = object => {
+		const contentType = object.objectHeaders.ContentType || '';
+
+		if (contentType.startsWith('image/')) {
+			return (
+				<div className="col-12 mb-2">
+					<img
+						className="rounded mw-100 mx-auto d-block"
+						src={object.url}
+						style={{maxHeight: '60vh'}}
+					/>
+				</div>
+			);
+		}
+
+		if (contentType.startsWith('video/')) {
+			return (
+				<div className="col-12 mb-2">
+					<video controls className="mw-100 d-block mx-auto" style={{maxHeight: '60vh'}}>
+						<source src={object.url} type={contentType}/>
+					</video>
+				</div>
+			);
+		}
+	};
+
 	render() {
 		const {object} = this.props;
 		const {isShowModal, isApiProcessing} = this.state;
@@ -52,6 +78,7 @@ module.exports = class ObjectComponent extends Base {
 
 				<Modal.Body>
 					<div className="row">
+						{this.renderPreview(object)}
 						<div className="col-12 mb-2">
 							<strong className="d-block text-secondary mb-0">Path</strong>
 							<span>{object.path}</span>

@@ -95,7 +95,9 @@ exports.getObject = async ({id} = {}) => {
 	const headers = await s3.headObject(object.path);
 	const result = object.toJSON();
 
-	if (headers.ContentType?.startsWith('video/')) {
+	if (headers.ContentType?.startsWith('image/')) {
+		result.url = await s3.getSignedUrl(object.path, {expiresIn: 60 * 60});
+	} else if (headers.ContentType?.startsWith('video/')) {
 		result.url = await s3.getSignedUrl(object.path);
 	}
 
