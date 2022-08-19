@@ -1,9 +1,13 @@
 const {Op} = require('sequelize');
 const {
 	S3Client,
+	GetObjectCommand,
 	HeadObjectCommand,
 	ListObjectsV2Command,
 } = require('@aws-sdk/client-s3');
+const {
+	getSignedUrl,
+} = require('@aws-sdk/s3-request-presigner');
 const OBJECT_TYPE = require('../../shared/constants/object-type');
 const ObjectModel = require('../models/data/object-model');
 
@@ -106,4 +110,25 @@ exports.headObject = (path, options) => {
 	});
 
 	return client.send(headObjectCommand);
+};
+
+/**
+ * @param {string} path
+ * @param {number} expiresIn - Expires in seconds. Default is 24 hours.
+ * @returns {Promise<string>}
+ */
+exports.getSignedUrl = (path, {expiresIn = 24 * 60 * 60} = {}) => {
+	const client = new S3Client({
+		region: settings.region,
+		credentials: {
+			accessKeyId: settings.accessKeyId,
+			secretAccessKey: settings.secretAccessKey,
+		},
+	});
+	const getObjectCommand = new GetObjectCommand({
+		Bucket: settings.bucket,
+		Key: path,
+	});
+
+	return getSignedUrl(client, getObjectCommand, {expiresIn});
 };

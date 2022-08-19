@@ -95,6 +95,10 @@ exports.getObject = async ({id} = {}) => {
 	const headers = await s3.headObject(object.path);
 	const result = object.toJSON();
 
+	if (headers.ContentType?.startsWith('video/')) {
+		result.url = await s3.getSignedUrl(object.path);
+	}
+
 	result.objectHeaders = headers;
 	return result;
 };
