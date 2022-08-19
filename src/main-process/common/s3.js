@@ -4,6 +4,7 @@ const {
 	GetObjectCommand,
 	HeadObjectCommand,
 	ListObjectsV2Command,
+	PutObjectCommand,
 } = require('@aws-sdk/client-s3');
 const {
 	getSignedUrl,
@@ -131,4 +132,27 @@ exports.getSignedUrl = (path, {expiresIn = 24 * 60 * 60} = {}) => {
 	});
 
 	return getSignedUrl(client, getObjectCommand, {expiresIn});
+};
+
+/**
+ * https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/clients/client-s3/classes/putobjectcommand.html
+ * @param {string} path
+ * @param {Object} options
+ * @returns {Promise<PutObjectCommandOutput>}
+ */
+exports.putObject = (path, options) => {
+	const client = new S3Client({
+		region: settings.region,
+		credentials: {
+			accessKeyId: settings.accessKeyId,
+			secretAccessKey: settings.secretAccessKey,
+		},
+	});
+	const putObjectCommand = new PutObjectCommand({
+		...options,
+		Bucket: settings.bucket,
+		Key: path,
+	});
+
+	return client.send(putObjectCommand);
 };

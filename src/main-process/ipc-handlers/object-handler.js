@@ -1,9 +1,12 @@
-const {Op} = require('sequelize');
-const s3 = require('../common/s3');
-const utils = require('../common/utils');
+const {Op, UniqueConstraintError} = require('sequelize');
 const {
 	NotFoundError,
+	ConflictError,
 } = require('../../shared/errors');
+const OBJECT_TYPE = require('../../shared/constants/object-type');
+const FRONTEND_OPERATION_CODE = require('../../shared/constants/frontend-operation-code');
+const s3 = require('../common/s3');
+const utils = require('../common/utils');
 const ObjectModel = require('../models/data/object-model');
 
 /**
@@ -103,4 +106,48 @@ exports.getObject = async ({id} = {}) => {
 
 	result.objectHeaders = headers;
 	return result;
+};
+
+/**
+ * @param {string} dirname
+ * @param {string} basename
+ * @returns {Promise<ObjectModel>}
+ */
+exports.createFolder = async ({dirname, basename} = {}) => {
+	const object = new ObjectModel({
+		type: OBJECT_TYPE.FOLDER,
+		path: (dirname || null) ? `${dirname}/${basename}/` : `${basename}/`,
+	});
+
+	if (object.dirname) {
+		const parent = await ObjectModel.findOne({
+			where: {
+				type: OBJECT_TYPE.FOLDER,
+				path: `${object.dirname}/`,
+			},
+		});
+
+		if (!parent) {
+			throw new NotFoundError(`not found parent "${object.dirname}"`);
+		}
+	}
+
+	try {
+		await object.save();
+	} catch (error) {
+		if (
+			error instanceof UniqueConstraintError
+			&& (error.errors || [])[0]?.path === 'path'
+		) {
+			throw new ConflictError(error, {
+				frontendOperationCode: FRONTEND_OPERATION_CODE.SHOW_OBJECT_DUPLICATED_ALERT,
+				frontendOperationValue: object.path,
+			});
+		}
+
+		throw error;
+	}
+
+	await s3.putObject(object.path);
+	return object.toJSON();
 };
