@@ -4,7 +4,7 @@ const Modal = require('react-bootstrap/Modal').default;
 const utils = require('../../common/utils');
 const Base = require('../shared/base');
 
-module.exports = class ObjectComponent extends Base {
+module.exports = class ObjectModal extends Base {
 	static propTypes = {
 		onClose: PropTypes.func.isRequired,
 		object: PropTypes.shape({

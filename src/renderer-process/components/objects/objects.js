@@ -9,7 +9,7 @@ const store = require('../../common/store');
 const {STORE_KEYS} = require('../../common/constants');
 const Base = require('../shared/base');
 const Loading = require('../shared/loading');
-const ObjectComponent = require('./object');
+const ObjectModal = require('./object');
 
 const {api, dialog} = window;
 
@@ -203,7 +203,7 @@ module.exports = class Objects extends Base {
 		}
 	};
 
-	onRemoveObject = () => {
+	onCloseObjectModal = () => {
 		this.setState({object: null});
 	};
 
@@ -456,7 +456,7 @@ module.exports = class Objects extends Base {
 						}
 					</div>
 				</div>
-				{object && <ObjectComponent object={object} onClose={this.onRemoveObject}/>}
+				{object && <ObjectModal object={object} onClose={this.onCloseObjectModal}/>}
 			</div>
 		);
 	}
