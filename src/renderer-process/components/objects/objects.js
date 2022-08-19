@@ -9,6 +9,7 @@ const store = require('../../common/store');
 const {STORE_KEYS} = require('../../common/constants');
 const Base = require('../shared/base');
 const Loading = require('../shared/loading');
+const NewFolder = require('./new-folder');
 const ObjectModal = require('./object');
 
 const {api, dialog} = window;
@@ -52,6 +53,7 @@ module.exports = class Objects extends Base {
 		this.state.checked = Object.fromEntries(props.objects.items.map(({id}) => [id, false]));
 		this.state.objects = {...props.objects, items: [null, ...props.objects.items]};
 		this.state.object = null;
+		this.state.isShowNewFolderModal = false;
 	}
 
 	updateQueryArguments = async ({dirname, keyword}) => {
@@ -159,6 +161,11 @@ module.exports = class Objects extends Base {
 
 	onClickNewFolderButton = event => {
 		event.preventDefault();
+		this.setState({isShowNewFolderModal: true});
+	};
+
+	onCloseNewFolderModal = () => {
+		this.setState({isShowNewFolderModal: false});
 	};
 
 	onClickUploadButton = event => {
@@ -335,7 +342,10 @@ module.exports = class Objects extends Base {
 	};
 
 	render() {
-		const {breadcrumb, keyword, requestPool, objects, object} = this.state;
+		const {
+			dirname, keyword,
+			breadcrumb, requestPool, objects, object, isShowNewFolderModal,
+		} = this.state;
 		const isApiProcessing = requestPool.size > 0;
 		const hasAnyChecked = this.hasAnyChecked();
 
@@ -457,6 +467,11 @@ module.exports = class Objects extends Base {
 					</div>
 				</div>
 				{object && <ObjectModal object={object} onClose={this.onCloseObjectModal}/>}
+				{
+					isShowNewFolderModal && (
+						<NewFolder dirname={dirname} onClose={this.onCloseNewFolderModal}/>
+					)
+				}
 			</div>
 		);
 	}
