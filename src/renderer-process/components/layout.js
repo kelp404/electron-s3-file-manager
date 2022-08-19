@@ -7,8 +7,8 @@ const store = require('../common/store');
 const Base = require('./shared/base');
 const Loading = require('./shared/loading');
 const Navigation = require('./navigation');
-const Objects = require('./objects');
-const S3Settings = require('./s3-settings');
+const Objects = require('./objects/objects');
+const S3Settings = require('./settings/s3-settings');
 
 const {api} = window;
 

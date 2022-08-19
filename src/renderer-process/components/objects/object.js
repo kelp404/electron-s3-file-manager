@@ -1,8 +1,8 @@
 const PropTypes = require('prop-types');
 const React = require('react');
 const Modal = require('react-bootstrap/Modal').default;
-const utils = require('../common/utils');
-const Base = require('./shared/base');
+const utils = require('../../common/utils');
+const Base = require('../shared/base');
 
 module.exports = class ObjectComponent extends Base {
 	static propTypes = {

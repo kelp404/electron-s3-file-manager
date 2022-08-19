@@ -3,18 +3,18 @@ const React = require('react');
 const {Formik, Form, Field} = require('formik');
 const {
 	updateS3SettingsFormSchema,
-} = require('../../shared/validation/form-schemas/settings');
+} = require('../../../shared/validation/form-schemas/settings');
 const {
 	validateSetupS3SettingsForm,
 	validateUpdateS3SettingsForm,
-} = require('../validators/settings-validator');
-const utils = require('../common/utils');
+} = require('../../validators/settings-validator');
+const utils = require('../../common/utils');
 const {
 	STORE_KEYS,
-} = require('../common/constants');
-const store = require('../common/store');
-const Base = require('./shared/base');
-const SuccessIcon = require('./shared/success-icon');
+} = require('../../common/constants');
+const store = require('../../common/store');
+const Base = require('../shared/base');
+const SuccessIcon = require('../shared/success-icon');
 
 const {api, dialog} = window;
 
