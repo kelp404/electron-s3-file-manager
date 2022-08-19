@@ -9,6 +9,7 @@ const store = require('../common/store');
 const {STORE_KEYS} = require('../common/constants');
 const Base = require('./shared/base');
 const Loading = require('./shared/loading');
+const ObjectComponent = require('./object');
 
 const {api, dialog} = window;
 
@@ -50,6 +51,7 @@ module.exports = class Objects extends Base {
 		};
 		this.state.checked = Object.fromEntries(props.objects.items.map(({id}) => [id, false]));
 		this.state.objects = {...props.objects, items: [null, ...props.objects.items]};
+		this.state.object = null;
 	}
 
 	updateQueryArguments = async ({dirname, keyword}) => {
@@ -173,6 +175,38 @@ module.exports = class Objects extends Base {
 		this.updateQueryArguments({dirname, keyword: ''});
 	};
 
+	onClickFileObjectLink = async event => {
+		const {objectId} = event.target.dataset;
+		const requestId = Math.random().toString(36);
+
+		event.preventDefault();
+		try {
+			utils.addBusyClass();
+			this.setState(prevState => ({
+				requestPool: new Set([...prevState.requestPool, requestId]),
+			}));
+
+			const object = await api.send({
+				method: 'getObject',
+				data: {id: objectId},
+			});
+
+			this.setState({object});
+		} catch (error) {
+			dialog.showErrorBox('Error', `${error}`);
+		} finally {
+			utils.removeBusyClass();
+			this.setState(prevState => {
+				prevState.requestPool.delete(requestId);
+				return {requestPool: new Set(prevState.requestPool)};
+			});
+		}
+	};
+
+	onRemoveObject = () => {
+		this.setState({object: null});
+	};
+
 	onLoadNextPage = async () => {
 		const {dirname, keyword, objects} = this.state;
 
@@ -276,7 +310,14 @@ module.exports = class Objects extends Base {
 					}
 					{
 						object.type === OBJECT_TYPE.FILE && (
-							<a href="#">{name}</a>
+							<a
+								data-object-id={object.id}
+								href={`#${object.id}`}
+								className={classnames({disabled: isApiProcessing})}
+								onClick={this.onClickFileObjectLink}
+							>
+								{name}
+							</a>
 						)
 					}
 				</div>
@@ -294,7 +335,7 @@ module.exports = class Objects extends Base {
 	};
 
 	render() {
-		const {breadcrumb, keyword, requestPool, objects} = this.state;
+		const {breadcrumb, keyword, requestPool, objects, object} = this.state;
 		const isApiProcessing = requestPool.size > 0;
 		const hasAnyChecked = this.hasAnyChecked();
 
@@ -415,6 +456,7 @@ module.exports = class Objects extends Base {
 						}
 					</div>
 				</div>
+				{object && <ObjectComponent object={object} onClose={this.onRemoveObject}/>}
 			</div>
 		);
 	}

@@ -16,5 +16,5 @@ darkreader.enable({
 	contrast: 90,
 	sepia: 10,
 });
-darkreader.exportGeneratedCSS().then(console.log);
+setTimeout(() => darkreader.exportGeneratedCSS().then(console.log), 5000);
 ```
