@@ -95,6 +95,7 @@ module.exports = class Objects extends Base {
 					...result,
 					items: [null, ...result.items],
 				},
+				checked: Object.fromEntries(result.items.map(({id}) => [id, false])),
 			});
 		} catch (error) {
 			dialog.showErrorBox('Error', `${error}`);
