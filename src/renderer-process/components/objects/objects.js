@@ -211,8 +211,14 @@ module.exports = class Objects extends Base {
 		this.setState({isShowNewFolderModal: true});
 	};
 
-	onCloseNewFolderModal = () => {
+	onCloseNewFolderModal = ({reload} = {}) => {
 		this.setState({isShowNewFolderModal: false});
+
+		if (reload) {
+			const {dirname, keyword} = this.state;
+
+			this.updateQueryArguments({dirname, keyword});
+		}
 	};
 
 	onClickUploadButton = event => {

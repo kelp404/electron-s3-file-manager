@@ -1,8 +1,12 @@
 const classnames = require('classnames');
+const pupa = require('pupa').default;
 const PropTypes = require('prop-types');
 const {Formik, Form, Field} = require('formik');
 const React = require('react');
 const Modal = require('react-bootstrap/Modal').default;
+const {
+	SHOW_OBJECT_DUPLICATED_ALERT,
+} = require('../../../shared/constants/frontend-operation-code');
 const {
 	createFolderFormSchema,
 } = require('../../../shared/validation/form-schemas/object');
@@ -11,6 +15,8 @@ const {
 } = require('../../validators/object-validator');
 const utils = require('../../common/utils');
 const Base = require('../shared/base');
+
+const {api, dialog} = window;
 
 module.exports = class NewFolderModal extends Base {
 	static propTypes = {
@@ -25,6 +31,7 @@ module.exports = class NewFolderModal extends Base {
 		};
 		this.state.requestPool = new Set();
 		this.state.isShowModal = true;
+		this.state.pathDuplicatedAlertMessage = null;
 	}
 
 	generateCreateFolderInitialValues = () => ({
@@ -37,9 +44,42 @@ module.exports = class NewFolderModal extends Base {
 		setTimeout(this.props.onClose, 300);
 	};
 
-	onSubmitCreateFolderForm = async values => {
-		// Todo: call api
-		console.log('onSubmitCreateFolderForm', values);
+	onSubmitCreateFolderForm = async ({dirname, basename}) => {
+		const requestId = Math.random().toString(36);
+
+		try {
+			utils.addBusyClass();
+			this.setState(prevState => ({
+				pathDuplicatedAlertMessage: null,
+				requestPool: new Set([...prevState.requestPool, requestId]),
+			}));
+
+			await api.send({
+				method: 'createFolder',
+				data: {dirname, basename},
+			});
+			this.setState({isShowModal: false});
+			setTimeout(() => this.props.onClose({reload: true}), 300);
+		} catch (error) {
+			if (error?.extra?.frontendOperationCode === SHOW_OBJECT_DUPLICATED_ALERT) {
+				this.setState({
+					pathDuplicatedAlertMessage: pupa(
+						'The path "{0}" is already exists.',
+						[error?.extra?.frontendOperationValue],
+					),
+				});
+
+				return;
+			}
+
+			dialog.showErrorBox('Error', `${error.message}`);
+		} finally {
+			utils.removeBusyClass();
+			this.setState(prevState => {
+				prevState.requestPool.delete(requestId);
+				return {requestPool: new Set(prevState.requestPool)};
+			});
+		}
 	};
 
 	renderCreateFolderForm = ({errors, submitCount, initialValues}) => {
