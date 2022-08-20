@@ -98,7 +98,7 @@ module.exports = class Objects extends Base {
 				checked: Object.fromEntries(result.items.map(({id}) => [id, false])),
 			});
 		} catch (error) {
-			dialog.showErrorBox('Error', `${error}`);
+			dialog.showErrorBox('Error', `${error.message}`);
 		} finally {
 			utils.removeBusyClass();
 			this.setState(prevState => {
@@ -192,7 +192,7 @@ module.exports = class Objects extends Base {
 				};
 			});
 		} catch (error) {
-			dialog.showErrorBox('Error', `${error}`);
+			dialog.showErrorBox('Error', `${error.message}`);
 		} finally {
 			utils.removeBusyClass();
 			this.setState(prevState => {
@@ -247,7 +247,7 @@ module.exports = class Objects extends Base {
 
 			this.setState({object});
 		} catch (error) {
-			dialog.showErrorBox('Error', `${error}`);
+			dialog.showErrorBox('Error', `${error.message}`);
 		} finally {
 			utils.removeBusyClass();
 			this.setState(prevState => {
@@ -281,7 +281,7 @@ module.exports = class Objects extends Base {
 				},
 			});
 		} catch (error) {
-			dialog.showErrorBox('Error', `${error}`);
+			dialog.showErrorBox('Error', `${error.message}`);
 		}
 	};
 

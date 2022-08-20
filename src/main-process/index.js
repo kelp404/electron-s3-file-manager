@@ -40,6 +40,7 @@ function generateIpcMainApiHandler() {
 
 	return async (event, args = {}) => {
 		const startTime = new Date();
+		let error;
 
 		try {
 			const {method, data} = args;
@@ -49,7 +50,14 @@ function generateIpcMainApiHandler() {
 				throw new BadRequestError(`not found "${method}"`);
 			}
 
-			return await handler(data);
+			const result = await handler(data);
+			return [null, result];
+		} catch (err) {
+			error = err;
+			return [
+				typeof error.toJSON === 'function' ? error.toJSON() : error,
+				null,
+			];
 		} finally {
 			const processTimeInMillisecond = Date.now() - startTime;
 			const processTime = `${processTimeInMillisecond}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
@@ -58,6 +66,10 @@ function generateIpcMainApiHandler() {
 				`${MAIN_API} ${processTime.padStart(7)}ms ${`${args?.method}                              `.slice(0, 30)}`,
 				{data: args?.data},
 			);
+
+			if (error) {
+				console.error(error);
+			}
 		}
 	};
 }

@@ -12,5 +12,13 @@ contextBridge.exposeInMainWorld('dialog', {
 	},
 });
 contextBridge.exposeInMainWorld('api', {
-	send: ({method, data}) => ipcRenderer.invoke(MAIN_API, {method, data}),
+	async send({method, data}) {
+		const [error, result] = await ipcRenderer.invoke(MAIN_API, {method, data});
+
+		if (error) {
+			throw error;
+		}
+
+		return result;
+	},
 });

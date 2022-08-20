@@ -1,4 +1,36 @@
-class BadRequestError extends Error {
+class BaseError extends Error {
+	constructor(message) {
+		super(message instanceof Error ? `${message}` : message?.message);
+
+		if (message?.stack) {
+			this.stack = message.stack;
+		}
+
+		if (message?.secondaryStack) {
+			this.secondaryStack = message.secondaryStack;
+		}
+
+		if (message?.status) {
+			this.status = message.status;
+		}
+
+		if (message?.extra) {
+			this.extra = message.extra;
+		}
+	}
+
+	toJSON() {
+		return {
+			message: this.message,
+			secondaryStack: this.secondaryStack,
+			stack: this.stack,
+			status: this.status,
+			extra: this.extra,
+		};
+	}
+}
+
+class BadRequestError extends BaseError {
 	/**
    * @param {*} message
    * @param {{frontendOperationCode: string, frontendOperationValue: *}|undefined} extra
@@ -15,7 +47,7 @@ class BadRequestError extends Error {
 	}
 }
 
-class UnauthorizedError extends Error {
+class UnauthorizedError extends BaseError {
 	/**
    * @param {*} message
    * @param {{frontendOperationCode: string, frontendOperationValue: *}|undefined} extra
@@ -33,7 +65,7 @@ class UnauthorizedError extends Error {
 	}
 }
 
-class ForbiddenError extends Error {
+class ForbiddenError extends BaseError {
 	/**
    * @param {*} message
    * @param {{frontendOperationCode: string, frontendOperationValue: *}|undefined} extra
@@ -50,7 +82,7 @@ class ForbiddenError extends Error {
 	}
 }
 
-class NotFoundError extends Error {
+class NotFoundError extends BaseError {
 	/**
    * @param {*} message
    * @param {{frontendOperationCode: string, frontendOperationValue: *}|undefined} extra
@@ -67,7 +99,7 @@ class NotFoundError extends Error {
 	}
 }
 
-class ConflictError extends Error {
+class ConflictError extends BaseError {
 	/**
    * @param {*} message
    * @param {{frontendOperationCode: string, frontendOperationValue: *}|undefined} extra
@@ -84,7 +116,7 @@ class ConflictError extends Error {
 	}
 }
 
-class UnprocessableEntityError extends Error {
+class UnprocessableEntityError extends BaseError {
 	/**
    * @param {*} message
    * @param {{frontendOperationCode: string, frontendOperationValue: *}|undefined} extra
@@ -101,7 +133,7 @@ class UnprocessableEntityError extends Error {
 	}
 }
 
-class TooManyRequestsError extends Error {
+class TooManyRequestsError extends BaseError {
 	/**
    * @param {*} message
    * @param {{frontendOperationCode: string, frontendOperationValue: *}|undefined} extra
@@ -118,7 +150,7 @@ class TooManyRequestsError extends Error {
 	}
 }
 
-class MainProcessError extends Error {
+class MainProcessError extends BaseError {
 	/**
    * @param {*} message
    * @param {{frontendOperationCode: string, frontendOperationValue: *}|undefined} extra
@@ -136,6 +168,7 @@ class MainProcessError extends Error {
 }
 
 module.exports = {
+	BaseError,
 	BadRequestError,
 	UnauthorizedError,
 	ForbiddenError,

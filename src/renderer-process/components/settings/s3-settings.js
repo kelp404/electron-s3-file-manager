@@ -65,7 +65,7 @@ module.exports = class S3Settings extends Base {
 			});
 			resetForm({values: this.generateS3SettingsInitialValues(nextSettings)});
 		} catch (error) {
-			dialog.showErrorBox('Error', `${error}`);
+			dialog.showErrorBox('Error', `${error.message}`);
 		} finally {
 			utils.removeBusyClass();
 			this.setState(prevState => {
