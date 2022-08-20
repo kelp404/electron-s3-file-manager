@@ -1,3 +1,4 @@
+const pLimit = require('p-limit');
 const {Op, UniqueConstraintError} = require('sequelize');
 const {
 	NotFoundError,
@@ -150,4 +151,77 @@ exports.createFolder = async ({dirname, basename} = {}) => {
 
 	await s3.putObject(object.path);
 	return object.toJSON();
+};
+
+/**
+ * @param {Array<number>} ids
+ * @returns {Promise<null>}
+ */
+exports.deleteObjects = async ({ids} = {}) => {
+	const limit = pLimit(1);
+	const files = [];
+	const folders = [];
+	const objects = await ObjectModel.findAll({
+		where: {
+			id: {[Op.in]: ids},
+		},
+	});
+
+	if (objects.length !== ids.length) {
+		const existsIds = objects.map(({id}) => id);
+
+		ids.forEach(id => {
+			if (!existsIds.includes(id)) {
+				throw new NotFoundError(`not found "${id}"`);
+			}
+		});
+	}
+
+	await Promise.all(objects.map(object => limit(async () => {
+		if (object.type === OBJECT_TYPE.FILE) {
+			files.push(object);
+		} else {
+			const [deepFiles, deepFolders] = await Promise.all([
+				ObjectModel.findAll({
+					where: {
+						type: OBJECT_TYPE.FILE,
+						path: {[Op.like]: utils.generateLikeSyntax(object.path, {start: ''})},
+					},
+				}),
+				ObjectModel.findAll({
+					where: {
+						type: OBJECT_TYPE.FOLDER,
+						path: {[Op.like]: utils.generateLikeSyntax(object.path, {start: ''})},
+					},
+				}),
+			]);
+
+			files.push(...deepFiles);
+			folders.push(...deepFolders);
+		}
+	})));
+
+	if (files.length) {
+		await Promise.all([
+			s3.deleteObjects(files.map(file => file.path)),
+			ObjectModel.destroy({
+				where: {id: {[Op.in]: files.map(file => file.id)}},
+			}),
+		]);
+	}
+
+	if (folders.length) {
+		await Promise.all([
+			s3.deleteObjects(
+				folders
+					.map(folder => folder.path)
+					.sort((a, b) => b.split('/').length - a.split('/').length),
+			),
+			ObjectModel.destroy({
+				where: {id: {[Op.in]: folders.map(folder => folder.id)}},
+			}),
+		]);
+	}
+
+	return null;
 };

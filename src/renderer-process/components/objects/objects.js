@@ -152,8 +152,54 @@ module.exports = class Objects extends Base {
 		this.updateQueryArguments({dirname, keyword});
 	};
 
-	onClickDeleteObjectsButton = event => {
+	onClickDeleteObjectsButton = async event => {
+		const requestId = Math.random().toString(36);
+
 		event.preventDefault();
+		try {
+			const {checked} = this.state;
+			const objectIds = Object.entries(checked)
+				.filter(([_, value]) => value)
+				.map(([key]) => Number(key));
+
+			utils.addBusyClass();
+			this.setState(prevState => ({
+				requestPool: new Set([...prevState.requestPool, requestId]),
+			}));
+
+			await api.send({
+				method: 'deleteObjects',
+				data: {ids: objectIds},
+			});
+
+			this.setState(prevState => {
+				const nextChecked = {...prevState.checked};
+				const nextObjectItems = [
+					...prevState.objects.items.slice(0, 1),
+					...prevState.objects.items.slice(1).filter(object => !objectIds.includes(object.id)),
+				];
+
+				for (const objectId of objectIds) {
+					delete nextChecked[objectId];
+				}
+
+				return {
+					checked: nextChecked,
+					objects: {
+						...prevState.objects,
+						items: nextObjectItems,
+					},
+				};
+			});
+		} catch (error) {
+			dialog.showErrorBox('Error', `${error}`);
+		} finally {
+			utils.removeBusyClass();
+			this.setState(prevState => {
+				prevState.requestPool.delete(requestId);
+				return {requestPool: new Set(prevState.requestPool)};
+			});
+		}
 	};
 
 	onClickDownloadObjectsButton = event => {

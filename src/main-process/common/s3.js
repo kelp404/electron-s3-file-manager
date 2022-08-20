@@ -1,10 +1,11 @@
 const {Op} = require('sequelize');
 const {
-	S3Client,
+	DeleteObjectsCommand,
 	GetObjectCommand,
 	HeadObjectCommand,
 	ListObjectsV2Command,
 	PutObjectCommand,
+	S3Client,
 } = require('@aws-sdk/client-s3');
 const {
 	getSignedUrl,
@@ -155,4 +156,27 @@ exports.putObject = (path, options) => {
 	});
 
 	return client.send(putObjectCommand);
+};
+
+/**
+ * https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/clients/client-s3/classes/deleteobjectscommand.html
+ * @param {Array<string>} paths
+ * @returns {Promise<DeleteObjectsCommandOutput>}
+ */
+exports.deleteObjects = paths => {
+	const client = new S3Client({
+		region: settings.region,
+		credentials: {
+			accessKeyId: settings.accessKeyId,
+			secretAccessKey: settings.secretAccessKey,
+		},
+	});
+	const deleteObjectsCommand = new DeleteObjectsCommand({
+		Bucket: settings.bucket,
+		Delete: {
+			Objects: paths.map(path => ({Key: path})),
+		},
+	});
+
+	return client.send(deleteObjectsCommand);
 };
