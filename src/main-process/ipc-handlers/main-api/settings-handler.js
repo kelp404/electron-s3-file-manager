@@ -1,8 +1,8 @@
 const {
 	MAIN_SETTINGS_ID,
-} = require('../../shared/constants/settings');
-const SettingsModel = require('../models/data/settings-model');
-const s3 = require('../common/s3');
+} = require('../../../shared/constants/settings');
+const SettingsModel = require('../../models/data/settings-model');
+const s3 = require('../../common/s3');
 
 /**
  * @returns {Promise<null|SettingsModel>}

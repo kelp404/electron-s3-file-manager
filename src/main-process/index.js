@@ -1,14 +1,18 @@
 const path = require('path');
-const {app, BrowserWindow, ipcMain, nativeTheme, dialog} = require('electron');
+const {app, BrowserWindow, ipcMain} = require('electron');
 const isDev = require('electron-is-dev');
 const {
 	BadRequestError,
 } = require('../shared/errors');
 const {
-	MAIN_API, GET_CONFIG, SHOW_ERROR_BOX,
+	MAIN_API,
+	CONFIG: {GET_CONFIG},
+	DIALOG: {SHOW_ERROR_BOX, SHOW_OPEN_DIALOG},
 } = require('../shared/constants/ipc');
 const {MAIN_SETTINGS_ID} = require('../shared/constants/settings');
 const {connectDatabase, runMigrations} = require('./common/database');
+const configHandler = require('./ipc-handlers/config-handler');
+const dialogHandler = require('./ipc-handlers/dialog-handler');
 
 try {
 	require('electron-reload')(__dirname);
@@ -36,7 +40,7 @@ function createWindow() {
 }
 
 function generateIpcMainApiHandler() {
-	const handlers = require('./ipc-handlers');
+	const handlers = require('./ipc-handlers/main-api');
 
 	return async (event, args = {}) => {
 		const startTime = new Date();
@@ -74,12 +78,9 @@ function generateIpcMainApiHandler() {
 	};
 }
 
-ipcMain.handle(GET_CONFIG, () => ({
-	shouldUseDarkColors: nativeTheme.shouldUseDarkColors,
-}));
-ipcMain.handle(SHOW_ERROR_BOX, (event, [title, content]) => {
-	dialog.showErrorBox(title, content);
-});
+ipcMain.handle(GET_CONFIG, configHandler.getConfig);
+ipcMain.handle(SHOW_ERROR_BOX, dialogHandler.showErrorBox);
+ipcMain.handle(SHOW_OPEN_DIALOG, dialogHandler.showOpenDialog);
 
 app.whenReady().then(async () => {
 	await runMigrations();

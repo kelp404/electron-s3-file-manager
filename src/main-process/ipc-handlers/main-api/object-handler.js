@@ -3,12 +3,12 @@ const {Op, UniqueConstraintError} = require('sequelize');
 const {
 	NotFoundError,
 	ConflictError,
-} = require('../../shared/errors');
-const OBJECT_TYPE = require('../../shared/constants/object-type');
-const FRONTEND_OPERATION_CODE = require('../../shared/constants/frontend-operation-code');
-const s3 = require('../common/s3');
-const utils = require('../common/utils');
-const ObjectModel = require('../models/data/object-model');
+} = require('../../../shared/errors');
+const OBJECT_TYPE = require('../../../shared/constants/object-type');
+const FRONTEND_OPERATION_CODE = require('../../../shared/constants/frontend-operation-code');
+const s3 = require('../../common/s3');
+const utils = require('../../common/utils');
+const ObjectModel = require('../../models/data/object-model');
 
 /**
  * @param {string} dirname

@@ -519,6 +519,8 @@ module.exports = class Objects extends Base {
 						}
 					</div>
 				</div>
+
+				{/* Modals */}
 				{object && <ObjectModal object={object} onClose={this.onCloseObjectModal}/>}
 				{
 					isShowNewFolderModal && (
