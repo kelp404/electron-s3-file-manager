@@ -10,6 +10,9 @@ const {
 const {
 	getSignedUrl,
 } = require('@aws-sdk/s3-request-presigner');
+const {
+	Upload,
+} = require('@aws-sdk/lib-storage');
 const OBJECT_TYPE = require('../../shared/constants/object-type');
 const ObjectModel = require('../models/data/object-model');
 
@@ -156,6 +159,32 @@ exports.putObject = (path, options) => {
 	});
 
 	return client.send(putObjectCommand);
+};
+
+exports.upload = ({path, content, options}) => {
+	const client = new S3Client({
+		region: settings.region,
+		credentials: {
+			accessKeyId: settings.accessKeyId,
+			secretAccessKey: settings.secretAccessKey,
+		},
+	});
+	const upload = new Upload({
+		client,
+		params: {
+			...options,
+			Bucket: settings.bucket,
+			Key: path,
+			Body: content,
+		},
+	});
+
+	upload.on('httpUploadProgress', progress => {
+		// Todo: emit event
+		console.log('progress', progress);
+	});
+
+	return upload.done();
 };
 
 /**

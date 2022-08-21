@@ -1,3 +1,6 @@
+const fs = require('fs');
+const path = require('path');
+const mimeTypes = require('mime-types');
 const pLimit = require('p-limit');
 const {Op, UniqueConstraintError} = require('sequelize');
 const {
@@ -6,6 +9,7 @@ const {
 } = require('../../../shared/errors');
 const OBJECT_TYPE = require('../../../shared/constants/object-type');
 const FRONTEND_OPERATION_CODE = require('../../../shared/constants/frontend-operation-code');
+const STORAGE_CLASS = require('../../../shared/constants/storage-class');
 const s3 = require('../../common/s3');
 const utils = require('../../common/utils');
 const ObjectModel = require('../../models/data/object-model');
@@ -150,6 +154,64 @@ exports.createFolder = async ({dirname, basename} = {}) => {
 	}
 
 	await s3.putObject(object.path);
+	return object.toJSON();
+};
+
+exports.createFile = async ({localPath, dirname}) => {
+	const basename = path.basename(localPath);
+	const object = new ObjectModel({
+		type: OBJECT_TYPE.FILE,
+		path: (dirname || null) ? `${dirname}/${basename}` : `${basename}`,
+		storageClass: STORAGE_CLASS.STANDARD,
+	});
+
+	if (object.dirname) {
+		const parent = await ObjectModel.findOne({
+			where: {
+				type: OBJECT_TYPE.FOLDER,
+				path: `${object.dirname}/`,
+			},
+		});
+
+		if (!parent) {
+			throw new NotFoundError(`not found parent "${object.dirname}"`);
+		}
+	}
+
+	try {
+		await object.save();
+	} catch (error) {
+		if (
+			error instanceof UniqueConstraintError
+			&& (error.errors || [])[0]?.path === 'path'
+		) {
+			throw new ConflictError(error, {
+				frontendOperationCode: FRONTEND_OPERATION_CODE.SHOW_OBJECT_DUPLICATED_ALERT,
+				frontendOperationValue: object.path,
+			});
+		}
+
+		throw error;
+	}
+
+	try {
+		await s3.upload({
+			path: object.path,
+			content: fs.createReadStream(localPath),
+			options: {
+				ContentType: mimeTypes.lookup(basename),
+			},
+		});
+		const objectHeaders = await s3.headObject(object.path);
+
+		object.size = objectHeaders.ContentLength;
+		object.lastModified = objectHeaders.LastModified;
+		await object.save();
+	} catch (error) {
+		await object.destroy();
+		throw error;
+	}
+
 	return object.toJSON();
 };
 
