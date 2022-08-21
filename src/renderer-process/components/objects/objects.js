@@ -11,6 +11,7 @@ const Base = require('../shared/base');
 const Loading = require('../shared/loading');
 const NewFolder = require('./new-folder');
 const ObjectModal = require('./object');
+const Uploader = require('./uploader');
 
 const {api, dialog} = window;
 
@@ -54,6 +55,7 @@ module.exports = class Objects extends Base {
 		this.state.objects = {...props.objects, items: [null, ...props.objects.items]};
 		this.state.object = null;
 		this.state.isShowNewFolderModal = false;
+		this.state.isShowUploaderModal = false;
 	}
 
 	updateQueryArguments = async ({dirname, keyword}) => {
@@ -223,6 +225,17 @@ module.exports = class Objects extends Base {
 
 	onClickUploadButton = event => {
 		event.preventDefault();
+		this.setState({isShowUploaderModal: true});
+	};
+
+	onCloseUploaderModal = ({reload} = {}) => {
+		this.setState({isShowUploaderModal: false});
+
+		if (reload) {
+			const {dirname, keyword} = this.state;
+
+			this.updateQueryArguments({dirname, keyword});
+		}
 	};
 
 	onClickFolderObjectLink = event => {
@@ -397,7 +410,8 @@ module.exports = class Objects extends Base {
 	render() {
 		const {
 			dirname, keyword,
-			breadcrumb, requestPool, objects, object, isShowNewFolderModal,
+			isShowNewFolderModal, isShowUploaderModal,
+			breadcrumb, requestPool, objects, object,
 		} = this.state;
 		const isApiProcessing = requestPool.size > 0;
 		const hasAnyChecked = this.hasAnyChecked();
@@ -525,6 +539,11 @@ module.exports = class Objects extends Base {
 				{
 					isShowNewFolderModal && (
 						<NewFolder dirname={dirname} onClose={this.onCloseNewFolderModal}/>
+					)
+				}
+				{
+					isShowUploaderModal && (
+						<Uploader dirname={dirname} onClose={this.onCloseUploaderModal}/>
 					)
 				}
 			</div>
