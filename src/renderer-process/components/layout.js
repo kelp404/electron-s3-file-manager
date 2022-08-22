@@ -8,7 +8,7 @@ const Base = require('./shared/base');
 const Loading = require('./shared/loading');
 const Navigation = require('./navigation');
 const Objects = require('./objects/objects');
-const S3Settings = require('./settings/s3-settings');
+const Settings = require('./settings/settings');
 
 const {api} = window;
 
@@ -58,7 +58,7 @@ module.exports = class Layout extends Base {
 		const {currentNavigationTab, objects} = this.state;
 
 		if (currentNavigationTab === NAVIGATION_TABS.SETTINGS) {
-			return <S3Settings/>;
+			return <Settings/>;
 		}
 
 		if (objects == null) {

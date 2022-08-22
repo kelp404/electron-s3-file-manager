@@ -18,7 +18,7 @@ const SuccessIcon = require('../shared/success-icon');
 
 const {api, dialog} = window;
 
-module.exports = class S3Settings extends Base {
+module.exports = class Settings extends Base {
 	constructor(props) {
 		super(props);
 		this.validators = {
