@@ -22,7 +22,7 @@ module.exports = class Layout extends Base {
 	async componentDidMount() {
 		super.componentDidMount();
 
-		const settings = await api.send({method: 'getSettings'});
+		const settings = await api.getSettings();
 		const hasAccessKeyId = Boolean(settings?.accessKeyId);
 		const currentNavigationTab = hasAccessKeyId ? NAVIGATION_TABS.OBJECTS : NAVIGATION_TABS.SETTINGS;
 
@@ -35,7 +35,7 @@ module.exports = class Layout extends Base {
 
 				if (currentNavigationTab === NAVIGATION_TABS.OBJECTS) {
 					if (store.get(STORE_KEYS.SETTINGS)?.accessKeyId) {
-						objects = await api.send({method: 'getObjects'});
+						objects = await api.getObjects();
 					} else {
 						objects = {hasNextPage: false, items: []};
 					}
@@ -46,7 +46,7 @@ module.exports = class Layout extends Base {
 		);
 
 		if (hasAccessKeyId) {
-			const objects = await api.send({method: 'getObjects'});
+			const objects = await api.getObjects();
 
 			this.setState({objects});
 		} else {

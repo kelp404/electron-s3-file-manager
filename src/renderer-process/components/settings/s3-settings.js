@@ -49,9 +49,9 @@ module.exports = class S3Settings extends Base {
 				isSubmitSuccess: false,
 			}));
 
-			const result = await api.send({
-				method: 'updateS3Settings',
-				data: {...values, secretAccessKey: values.secretAccessKey || undefined},
+			const result = await api.updateS3Settings({
+				...values,
+				secretAccessKey: values.secretAccessKey || undefined,
 			});
 			const nextSettings = {
 				...store.get(STORE_KEYS.SETTINGS),

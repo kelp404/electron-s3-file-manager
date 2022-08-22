@@ -157,7 +157,7 @@ exports.createFolder = async ({dirname, basename} = {}) => {
 	return object.toJSON();
 };
 
-exports.createFile = async ({localPath, dirname}) => {
+exports.createFile = async ({localPath, dirname} = {}) => {
 	const basename = path.basename(localPath);
 	const object = new ObjectModel({
 		type: OBJECT_TYPE.FILE,

@@ -68,10 +68,7 @@ module.exports = class Objects extends Base {
 				requestPool: new Set([...prevState.requestPool, requestId]),
 			}));
 
-			const result = await api.send({
-				method: 'getObjects',
-				data: {dirname, keyword},
-			});
+			const result = await api.getObjects({dirname, keyword});
 			const folders = (dirname || null)?.split('/') || [];
 
 			this.setState({
@@ -169,11 +166,7 @@ module.exports = class Objects extends Base {
 				requestPool: new Set([...prevState.requestPool, requestId]),
 			}));
 
-			await api.send({
-				method: 'deleteObjects',
-				data: {ids: objectIds},
-			});
-
+			await api.deleteObjects({ids: objectIds});
 			this.setState(prevState => {
 				const nextChecked = {...prevState.checked};
 				const nextObjectItems = [
@@ -259,10 +252,7 @@ module.exports = class Objects extends Base {
 				requestPool: new Set([...prevState.requestPool, requestId]),
 			}));
 
-			const object = await api.send({
-				method: 'getObject',
-				data: {id: objectId},
-			});
+			const object = await api.getObject({id: objectId});
 
 			this.setState({object});
 		} catch (error) {
@@ -284,13 +274,10 @@ module.exports = class Objects extends Base {
 		const {dirname, keyword, objects} = this.state;
 
 		try {
-			const result = await api.send({
-				method: 'getObjects',
-				data: {
-					dirname,
-					keyword,
-					after: objects.items.slice(-1)[0].id,
-				},
+			const result = await api.getObjects({
+				dirname,
+				keyword,
+				after: objects.items.slice(-1)[0].id,
 			});
 
 			this.setState({

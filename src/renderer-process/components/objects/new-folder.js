@@ -54,10 +54,7 @@ module.exports = class NewFolderModal extends Base {
 				requestPool: new Set([...prevState.requestPool, requestId]),
 			}));
 
-			await api.send({
-				method: 'createFolder',
-				data: {dirname, basename},
-			});
+			await api.createFolder({dirname, basename});
 			this.setState({isShowModal: false});
 			setTimeout(() => this.props.onClose({reload: true}), 300);
 		} catch (error) {
