@@ -266,8 +266,14 @@ module.exports = class Objects extends Base {
 		}
 	};
 
-	onCloseObjectModal = () => {
+	onCloseObjectModal = ({reload} = {}) => {
 		this.setState({object: null});
+
+		if (reload) {
+			const {dirname, keyword} = this.state;
+
+			this.updateQueryArguments({dirname, keyword});
+		}
 	};
 
 	onLoadNextPage = async () => {

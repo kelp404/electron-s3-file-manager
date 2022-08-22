@@ -4,6 +4,8 @@ const Modal = require('react-bootstrap/Modal').default;
 const utils = require('../../common/utils');
 const Base = require('../shared/base');
 
+const {api, dialog} = window;
+
 module.exports = class ObjectModal extends Base {
 	static propTypes = {
 		onClose: PropTypes.func.isRequired,
@@ -20,6 +22,7 @@ module.exports = class ObjectModal extends Base {
 
 	constructor(props) {
 		super(props);
+		this.state.requestPool = new Set();
 		this.state.isShowModal = true;
 	}
 
@@ -28,11 +31,33 @@ module.exports = class ObjectModal extends Base {
 		setTimeout(this.props.onClose, 300);
 	};
 
-	onDeleteObject = event => {
+	onClickDeleteObjectButton = async event => {
+		const requestId = Math.random().toString(36);
+
 		event.preventDefault();
+		try {
+			const {object} = this.props;
+
+			utils.addBusyClass();
+			this.setState(prevState => ({
+				requestPool: new Set([...prevState.requestPool, requestId]),
+			}));
+
+			await api.deleteObjects({ids: [object.id]});
+			this.setState({isShowModal: false});
+			setTimeout(() => this.props.onClose({reload: true}), 300);
+		} catch (error) {
+			utils.removeBusyClass();
+			dialog.showErrorBox('Error', `${error.message}`);
+		} finally {
+			this.setState(prevState => {
+				prevState.requestPool.delete(requestId);
+				return {requestPool: new Set(prevState.requestPool)};
+			});
+		}
 	};
 
-	onDownloadFile = event => {
+	onClickDownloadFileButton = event => {
 		event.preventDefault();
 	};
 
@@ -64,7 +89,8 @@ module.exports = class ObjectModal extends Base {
 
 	render() {
 		const {object} = this.props;
-		const {isShowModal, isApiProcessing} = this.state;
+		const {isShowModal, requestPool} = this.state;
+		const isApiProcessing = requestPool.size > 0;
 
 		return (
 			<Modal
@@ -127,14 +153,14 @@ module.exports = class ObjectModal extends Base {
 					<button
 						disabled={isApiProcessing}
 						type="button" className="btn btn-outline-danger"
-						onClick={this.onDeleteObject}
+						onClick={this.onClickDeleteObjectButton}
 					>
 						Delete
 					</button>
 					<button
 						autoFocus
 						type="button" className="btn btn-outline-primary"
-						onClick={this.onDownloadFile}
+						onClick={this.onClickDownloadFileButton}
 					>
 						Download
 					</button>
