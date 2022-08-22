@@ -229,6 +229,87 @@ exports.createFile = async ({$event, localPath, dirname, onProgressChannel} = {}
 };
 
 /**
+ * @param {IpcMainInvokeEvent} $event
+ * @param {string} localPath
+ * @param {string} dirname
+ * @param {Array<number>} ids - Object ids
+ * @param {string} onProgressChannel
+ * @returns {Promise<void>}
+ */
+exports.downloadObjects = async ({$event, localPath, dirname, ids, onProgressChannel}) => {
+	const objects = await ObjectModel.findAll({
+		where: {
+			id: {[Op.in]: ids},
+		},
+	});
+
+	if (objects.length !== ids.length) {
+		const existsIds = objects.map(({id}) => id);
+
+		ids.forEach(id => {
+			if (!existsIds.includes(id)) {
+				throw new NotFoundError(`not found object "${id}"`);
+			}
+		});
+
+		throw new NotFoundError(`not found "${ids}"`);
+	}
+
+	const files = [];
+	const limit = pLimit(1);
+	const onProgress = onProgressChannel
+		? progress => {
+			$event.sender.send(onProgressChannel, progress);
+		}
+		: null;
+
+	await Promise.all(objects.map(object => limit(async () => {
+		if (object.type === OBJECT_TYPE.FILE) {
+			files.push(object);
+			return;
+		}
+
+		const deepFiles = await ObjectModel.findAll({
+			where: {
+				path: {[Op.like]: utils.generateLikeSyntax(object.path, {start: ''})},
+				type: OBJECT_TYPE.FILE,
+			},
+		});
+
+		files.push(...deepFiles);
+	})));
+
+	await Promise.all(files.map((file, index) => limit(async () => {
+		const result = await s3.getObject(file.path);
+		const total = result.ContentLength;
+		let loaded = 0;
+		const writeStream = fs.createWriteStream(
+			path.join(localPath, ...file.path.replace(dirname, '').split(path.sep)),
+		);
+
+		result.Body.pipe(writeStream);
+		result.Body.on('data', chunk => {
+			loaded += chunk.length;
+
+			if (onProgress) {
+				const rate = 1 / files.length;
+
+				onProgress({
+					basename: file.basename,
+					total: 100,
+					loaded: parseInt((index * rate * 100) + (loaded / total * rate * 100), 10),
+				});
+			}
+		});
+
+		return new Promise((resolve, reject) => {
+			result.Body.on('error', reject);
+			result.Body.on('end', resolve);
+		});
+	})));
+};
+
+/**
  * @param {Array<number>} ids
  * @returns {Promise<null>}
  */

@@ -1,4 +1,6 @@
 const classnames = require('classnames');
+const Toast = require('react-bootstrap/Toast').default;
+const ToastContainer = require('react-bootstrap/ToastContainer').default;
 const PropTypes = require('prop-types');
 const React = require('react');
 const InfiniteScroll = require('@kelp404/react-infinite-scroller');
@@ -56,6 +58,7 @@ module.exports = class Objects extends Base {
 		this.state.object = null;
 		this.state.isShowNewFolderModal = false;
 		this.state.isShowUploaderModal = false;
+		this.state.downloadToasts = [];
 	}
 
 	updateQueryArguments = async ({dirname, keyword}) => {
@@ -197,8 +200,63 @@ module.exports = class Objects extends Base {
 		}
 	};
 
-	onClickDownloadObjectsButton = event => {
+	onClickDownloadObjectsButton = async event => {
 		event.preventDefault();
+
+		const {checked} = this.state;
+		const objectIds = Object.entries(checked)
+			.filter(([_, value]) => value)
+			.map(([key]) => Number(key));
+
+		this.downloadObjects(objectIds);
+	};
+
+	downloadObject = () => {
+		const {object} = this.state;
+
+		this.downloadObjects([object.id]);
+	};
+
+	downloadObjects = async objectIds => {
+		const {dirname} = this.state;
+		const requestId = Math.random().toString(36);
+
+		try {
+			const dialogResult = await dialog.showOpenDialog({
+				filters: [
+					{name: 'All Files', extensions: ['*']},
+				],
+				properties: ['openDirectory'],
+			});
+
+			await api.downloadObjects({
+				localPath: dialogResult.files[0].path,
+				dirname,
+				ids: objectIds,
+				onProgress: (_, progress) => {
+					this.setState(prevState => {
+						const newDownloadToasts = [...prevState.downloadToasts];
+						const newDownloadToast = newDownloadToasts.find(toast => toast.requestId === requestId);
+
+						if (newDownloadToast) {
+							newDownloadToast.basename = progress.basename;
+							newDownloadToast.total = progress.total;
+							newDownloadToast.loaded = progress.loaded;
+							return {downloadToasts: newDownloadToasts};
+						}
+
+						return {
+							downloadToasts: [...newDownloadToasts, {...progress, requestId}],
+						};
+					});
+				},
+			});
+			this.setState(prevState => ({
+				downloadToasts: prevState.downloadToasts.filter(toast => toast.requestId !== requestId),
+			}));
+		} catch (error) {
+			dialog.showErrorBox('Error', `${error.message}`);
+		}
 	};
 
 	onClickNewFolderButton = event => {
@@ -405,6 +463,7 @@ module.exports = class Objects extends Base {
 			dirname, keyword,
 			isShowNewFolderModal, isShowUploaderModal,
 			breadcrumb, requestPool, objects, object,
+			downloadToasts,
 		} = this.state;
 		const isApiProcessing = requestPool.size > 0;
 		const hasAnyChecked = this.hasAnyChecked();
@@ -528,7 +587,11 @@ module.exports = class Objects extends Base {
 				</div>
 
 				{/* Modals */}
-				{object && <ObjectModal object={object} onClose={this.onCloseObjectModal}/>}
+				{
+					object && (
+						<ObjectModal object={object} onClose={this.onCloseObjectModal} onDownload={this.downloadObject}/>
+					)
+				}
 				{
 					isShowNewFolderModal && (
 						<NewFolder dirname={dirname} onClose={this.onCloseNewFolderModal}/>
@@ -539,6 +602,26 @@ module.exports = class Objects extends Base {
 						<Uploader dirname={dirname} onClose={this.onCloseUploaderModal}/>
 					)
 				}
+				<ToastContainer position="bottom-end" className="p-3 position-fixed" style={{zIndex: 1200}}>
+					{
+						downloadToasts.map(downloadToast => (
+							<Toast key={downloadToast.requestId}>
+								<Toast.Header closeButton={false}>
+									<strong className="me-auto text-truncate">
+										Download {downloadToast.basename}
+									</strong>
+								</Toast.Header>
+								<Toast.Body>
+									<div className="progress" style={{height: '10px', width: '100%'}}>
+										<div
+											className="progress-bar progress-bar-striped progress-bar-animated"
+											style={{width: `${downloadToast.loaded}%`}}/>
+									</div>
+								</Toast.Body>
+							</Toast>
+						))
+					}
+				</ToastContainer>
 			</div>
 		);
 	}

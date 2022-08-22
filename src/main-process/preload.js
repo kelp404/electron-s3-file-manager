@@ -42,6 +42,11 @@ contextBridge.exposeInMainWorld('api', {
 	createFolder(data) {
 		return sendApiRequest({method: 'createFolder', data});
 	},
+	/**
+	 * @param {function(event, {Bucket: string, Key: string, loaded: number, part: number, total: number})} onProgress
+	 * @param {{localPath: string, dirname: string}} data
+	 * @returns {Promise<ObjectModel>}
+	 */
 	async createFile({onProgress, ...data} = {}) {
 		const id = Math.random().toString(36);
 		const channel = `createFile.onProgress:${id}`;
@@ -56,7 +61,33 @@ contextBridge.exposeInMainWorld('api', {
 				data: {...data, onProgressChannel: channel},
 			});
 		} finally {
-			ipcRenderer.off(channel, onProgress);
+			if (typeof onProgress === 'function') {
+				ipcRenderer.off(channel, onProgress);
+			}
+		}
+	},
+	/**
+	 * @param {function(event, {basename: string, total: number, loaded: number})} onProgress
+	 * @param {{localPath: string, dirname: string, ids: Array<number>}} data
+	 * @returns {Promise<*>}
+	 */
+	async downloadObjects({onProgress, ...data} = {}) {
+		const id = Math.random().toString(36);
+		const channel = `downloadObjects.onProgress:${id}`;
+
+		try {
+			if (typeof onProgress === 'function') {
+				ipcRenderer.on(channel, onProgress);
+			}
+
+			return await sendApiRequest({
+				method: 'downloadObjects',
+				data: {...data, onProgressChannel: channel},
+			});
+		} finally {
+			if (typeof onProgress === 'function') {
+				ipcRenderer.off(channel, onProgress);
+			}
 		}
 	},
 	deleteObjects(data) {

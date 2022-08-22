@@ -9,6 +9,7 @@ const {api, dialog} = window;
 module.exports = class ObjectModal extends Base {
 	static propTypes = {
 		onClose: PropTypes.func.isRequired,
+		onDownload: PropTypes.func.isRequired,
 		object: PropTypes.shape({
 			id: PropTypes.number.isRequired,
 			basename: PropTypes.string.isRequired,
@@ -59,6 +60,7 @@ module.exports = class ObjectModal extends Base {
 
 	onClickDownloadFileButton = event => {
 		event.preventDefault();
+		this.props.onDownload();
 	};
 
 	renderPreview = object => {

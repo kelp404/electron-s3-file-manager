@@ -139,6 +139,27 @@ exports.getSignedUrl = (path, {expiresIn = 24 * 60 * 60} = {}) => {
 };
 
 /**
+ * https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/clients/client-s3/classes/getobjectcommand.html
+ * @param {string} path
+ * @returns {Promise<GetObjectCommandOutput>}
+ */
+exports.getObject = path => {
+	const client = new S3Client({
+		region: settings.region,
+		credentials: {
+			accessKeyId: settings.accessKeyId,
+			secretAccessKey: settings.secretAccessKey,
+		},
+	});
+	const getObjectCommand = new GetObjectCommand({
+		Bucket: settings.bucket,
+		Key: path,
+	});
+
+	return client.send(getObjectCommand);
+};
+
+/**
  * https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/clients/client-s3/classes/putobjectcommand.html
  * @param {string} path
  * @param {Object} options
