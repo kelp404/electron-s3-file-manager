@@ -161,7 +161,14 @@ exports.putObject = (path, options) => {
 	return client.send(putObjectCommand);
 };
 
-exports.upload = ({path, content, options}) => {
+/**
+ * @param {string} path
+ * @param {Buffer|Stream} content
+ * @param {Object} options
+ * @param {function({Bucket: string, Key: string, loaded: number, part: number, total: number})} onProgress
+ * @returns {Promise<CompleteMultipartUploadCommandOutput | AbortMultipartUploadCommandOutput>}
+ */
+exports.upload = ({path, content, options, onProgress}) => {
 	const client = new S3Client({
 		region: settings.region,
 		credentials: {
@@ -179,10 +186,9 @@ exports.upload = ({path, content, options}) => {
 		},
 	});
 
-	upload.on('httpUploadProgress', progress => {
-		// Todo: emit event
-		console.log('progress', progress);
-	});
+	if (onProgress) {
+		upload.on('httpUploadProgress', onProgress);
+	}
 
 	return upload.done();
 };

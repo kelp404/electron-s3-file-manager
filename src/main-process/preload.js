@@ -42,8 +42,22 @@ contextBridge.exposeInMainWorld('api', {
 	createFolder(data) {
 		return sendApiRequest({method: 'createFolder', data});
 	},
-	createFile(data) {
-		return sendApiRequest({method: 'createFile', data});
+	async createFile({onProgress, ...data} = {}) {
+		const id = Math.random().toString(36);
+		const channel = `createFile.onProgress:${id}`;
+
+		try {
+			if (typeof onProgress === 'function') {
+				ipcRenderer.on(channel, onProgress);
+			}
+
+			return await sendApiRequest({
+				method: 'createFile',
+				data: {...data, onProgressChannel: channel},
+			});
+		} finally {
+			ipcRenderer.off(channel, onProgress);
+		}
 	},
 	deleteObjects(data) {
 		return sendApiRequest({method: 'deleteObjects', data});

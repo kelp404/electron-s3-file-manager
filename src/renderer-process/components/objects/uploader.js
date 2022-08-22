@@ -69,8 +69,11 @@ module.exports = class UploaderPage extends Base {
 	};
 
 	onClickUploadFilesButton = async () => {
+		const requestId = Math.random().toString(36);
+
 		try {
 			const {dirname} = this.props;
+			const {files} = this.state;
 			const uploadLimit = pLimit(1);
 			const updateStateLimit = pLimit(1);
 			let hasError;
@@ -96,18 +99,24 @@ module.exports = class UploaderPage extends Base {
 			});
 
 			utils.addBusyClass();
-			await Promise.all(this.files.map(file => uploadLimit(async () => {
+			this.setState(prevState => ({
+				requestPool: new Set([...prevState.requestPool, requestId]),
+			}));
+
+			await Promise.all(files.map(file => uploadLimit(async () => {
 				let isUploadSuccess;
 
 				try {
-					await api.file.uploadFile({
-						file,
+					await updateFileState(file.id, {progress: 0});
+					await api.createFile({
+						localPath: file.path,
 						dirname,
-						async onUploadProgress(progressEvent) {
+						async onProgress(_, progress) {
 							await updateStateLimit(() =>
-								updateFileState(file.id, {
-									progress: parseInt((progressEvent.loaded / progressEvent.total) * 90, 10),
-								}),
+								updateFileState(
+									file.id,
+									{progress: parseInt((progress.loaded / progress.total) * 100, 10)},
+								),
 							);
 						},
 					});
@@ -129,11 +138,17 @@ module.exports = class UploaderPage extends Base {
 			if (hasError) {
 				utils.removeBusyClass();
 			} else {
-				// Todo: go back and reload
+				this.setState({isShowModal: false});
+				setTimeout(() => this.props.onClose({reload: true}), 300);
 			}
 		} catch (error) {
 			utils.removeBusyClass();
 			dialog.showErrorBox('Error', `${error.message}`);
+		} finally {
+			this.setState(prevState => {
+				prevState.requestPool.delete(requestId);
+				return {requestPool: new Set(prevState.requestPool)};
+			});
 		}
 	};
 

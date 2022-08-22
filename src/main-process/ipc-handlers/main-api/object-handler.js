@@ -157,13 +157,25 @@ exports.createFolder = async ({dirname, basename} = {}) => {
 	return object.toJSON();
 };
 
-exports.createFile = async ({localPath, dirname} = {}) => {
+/**
+ * @param {IpcMainInvokeEvent} $event
+ * @param {string} localPath
+ * @param {string} dirname
+ * @param {string} onProgressChannel
+ * @returns {Promise<ObjectModel>}
+ */
+exports.createFile = async ({$event, localPath, dirname, onProgressChannel} = {}) => {
 	const basename = path.basename(localPath);
 	const object = new ObjectModel({
 		type: OBJECT_TYPE.FILE,
 		path: (dirname || null) ? `${dirname}/${basename}` : `${basename}`,
 		storageClass: STORAGE_CLASS.STANDARD,
 	});
+	const onProgress = onProgressChannel
+		? progress => {
+			$event.sender.send(onProgressChannel, progress);
+		}
+		: null;
 
 	if (object.dirname) {
 		const parent = await ObjectModel.findOne({
@@ -201,6 +213,7 @@ exports.createFile = async ({localPath, dirname} = {}) => {
 			options: {
 				ContentType: mimeTypes.lookup(basename),
 			},
+			onProgress,
 		});
 		const objectHeaders = await s3.headObject(object.path);
 

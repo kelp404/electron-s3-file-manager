@@ -37,6 +37,8 @@ function createWindow() {
 	} else {
 		mainWindow.loadFile('dist/renderer-process/index.html');
 	}
+
+	return mainWindow;
 }
 
 function generateIpcMainApiHandler() {
@@ -54,7 +56,7 @@ function generateIpcMainApiHandler() {
 				throw new BadRequestError(`not found "${method}"`);
 			}
 
-			const result = await handler(data);
+			const result = await handler({...data, $event: event});
 			return [null, result];
 		} catch (err) {
 			error = err;

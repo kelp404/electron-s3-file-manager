@@ -58,6 +58,7 @@ module.exports = class NewFolderModal extends Base {
 			this.setState({isShowModal: false});
 			setTimeout(() => this.props.onClose({reload: true}), 300);
 		} catch (error) {
+			utils.removeBusyClass();
 			if (error?.extra?.frontendOperationCode === SHOW_OBJECT_DUPLICATED_ALERT) {
 				this.setState({
 					pathDuplicatedAlertMessage: pupa(
@@ -71,7 +72,6 @@ module.exports = class NewFolderModal extends Base {
 
 			dialog.showErrorBox('Error', `${error.message}`);
 		} finally {
-			utils.removeBusyClass();
 			this.setState(prevState => {
 				prevState.requestPool.delete(requestId);
 				return {requestPool: new Set(prevState.requestPool)};
