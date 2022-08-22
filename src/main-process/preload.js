@@ -68,4 +68,7 @@ contextBridge.exposeInMainWorld('api', {
 	updateS3Settings(data) {
 		return sendApiRequest({method: 'updateS3Settings', data});
 	},
+	syncObjectsFromS3() {
+		return sendApiRequest({method: 'syncObjectsFromS3'});
+	},
 });

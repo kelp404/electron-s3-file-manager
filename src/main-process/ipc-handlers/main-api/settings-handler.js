@@ -50,3 +50,8 @@ exports.updateS3Settings = async ({accessKeyId, secretAccessKey, region, bucket}
 	s3.updateSettings(settings);
 	return settings.toJSON();
 };
+
+exports.syncObjectsFromS3 = async () => {
+	await s3.syncObjectsFromS3();
+	return null;
+};

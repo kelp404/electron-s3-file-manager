@@ -28,6 +28,7 @@ module.exports = class Settings extends Base {
 		this.state.requestPool = new Set();
 		this.state.settings = store.get(STORE_KEYS.SETTINGS);
 		this.state.isSubmitSuccess = false;
+		this.state.isSyncSuccess = false;
 	}
 
 	generateS3SettingsInitialValues(settings) {
@@ -38,6 +39,30 @@ module.exports = class Settings extends Base {
 			bucket: settings?.bucket || '',
 		};
 	}
+
+	onClickSyncButton = async event => {
+		const requestId = Math.random().toString(36);
+
+		event.preventDefault();
+		try {
+			utils.addBusyClass();
+			this.setState(prevState => ({
+				requestPool: new Set([...prevState.requestPool, requestId]),
+				isSyncSuccess: false,
+			}));
+
+			await api.syncObjectsFromS3();
+			this.setState({isSyncSuccess: true});
+		} catch (error) {
+			dialog.showErrorBox('Error', `${error.message}`);
+		} finally {
+			utils.removeBusyClass();
+			this.setState(prevState => {
+				prevState.requestPool.delete(requestId);
+				return {requestPool: new Set(prevState.requestPool)};
+			});
+		}
+	};
 
 	onSubmitUpdateS3SettingsForm = async (values, {resetForm}) => {
 		const requestId = Math.random().toString(36);
@@ -58,6 +83,7 @@ module.exports = class Settings extends Base {
 				...result,
 			};
 
+			await api.syncObjectsFromS3();
 			store.set(STORE_KEYS.SETTINGS, nextSettings);
 			this.setState({
 				isSubmitSuccess: true,
@@ -82,7 +108,7 @@ module.exports = class Settings extends Base {
 		const isApiProcessing = requestPool.size > 0;
 
 		return (
-			<Form className="card">
+			<Form className="card shadow-sm">
 				<div className="card-header">
 					S3 Settings
 				</div>
@@ -181,21 +207,49 @@ module.exports = class Settings extends Base {
 			validateSetupS3SettingsForm,
 			validateUpdateS3SettingsForm,
 		} = this.validators;
-		const {settings} = this.state;
+		const {settings, requestPool, isSyncSuccess} = this.state;
 		const isSetupS3Settings = !settings?.accessKeyId;
+		const isApiProcessing = requestPool.size > 0;
 
 		return (
-			<div className="row justify-content-center">
-				<div className="col-12 col-sm-10 col-md-8 col-lg-6 d-flex flex-column">
-					<Formik
-						initialValues={this.generateS3SettingsInitialValues(settings)}
-						validate={isSetupS3Settings ? validateSetupS3SettingsForm : validateUpdateS3SettingsForm}
-						onSubmit={this.onSubmitUpdateS3SettingsForm}
-					>
-						{this.renderCreateFolderForm}
-					</Formik>
+			<>
+				<div className="row justify-content-center mb-3">
+					<div className="col-12 col-sm-10 col-md-8 col-lg-6">
+						<Formik
+							initialValues={this.generateS3SettingsInitialValues(settings)}
+							validate={isSetupS3Settings ? validateSetupS3SettingsForm : validateUpdateS3SettingsForm}
+							onSubmit={this.onSubmitUpdateS3SettingsForm}
+						>
+							{this.renderCreateFolderForm}
+						</Formik>
+					</div>
 				</div>
-			</div>
+
+				<div className="row justify-content-center">
+					<div className="col-12 col-sm-10 col-md-8 col-lg-6">
+						<div className="card shadow-sm">
+							<div className="card-header">
+								Sync from S3
+							</div>
+							<div className="card-body">
+								<div className="mb-2">
+									<label className="form-label">Sync objects from AWS S3.</label>
+								</div>
+								<div className="d-flex align-items-center">
+									<button
+										disabled={isApiProcessing}
+										type="button" className="btn btn-outline-primary"
+										onClick={this.onClickSyncButton}
+									>
+										Sync
+									</button>
+									{isSyncSuccess && <SuccessIcon className="ms-2"/>}
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</>
 		);
 	}
 };
