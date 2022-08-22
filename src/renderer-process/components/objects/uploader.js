@@ -179,6 +179,7 @@ module.exports = class UploaderPage extends Base {
 						<div className="card-header d-flex justify-content-between">
 							<div>Files</div>
 							<button
+								disabled={isApiProcessing}
 								type="button"
 								className="btn btn-sm btn-outline-success"
 								style={{lineHeight: 'initial'}}
