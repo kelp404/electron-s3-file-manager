@@ -2,6 +2,16 @@
 A GUI AWS S3 file manager. It supports keyword search, download, upload and preview video.
 
 
+![search](_screenshot/details.png)
+
+## Installation
+```bash
+git clone https://github.com/kelp404/electron-s3-file-manager.git
+cd electron-s3-file-manager
+npm install
+npm start
+```
+
 ## Development
 ### Generate dark theme stylesheet
 #### 1. Disable dark mode.
