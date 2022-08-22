@@ -47,7 +47,7 @@ module.exports = class Objects extends Base {
 			items: [
 				{
 					id: Math.random().toString(36),
-					title: settings.bucket,
+					title: settings?.bucket,
 					dirname: '',
 					basename: '',
 				},
