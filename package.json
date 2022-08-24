@@ -16,7 +16,8 @@
     "ncu": "npm-check-updates",
     "start": "npm run dev",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "makemigration": "makemigration --name $npm_package_version --migrations-path src/main-process/migrations --models-path src/main-process/models/data && eslint src/main-process/migrations --fix || true"
+    "makemigration": "makemigration --name $npm_package_version --migrations-path src/main-process/migrations --models-path src/main-process/models/data && eslint src/main-process/migrations --fix || true",
+    "runmigration": "runmigration --migrations-path src/main-process/migrations --models-path src/main-process/models/data"
   },
   "repository": {
     "type": "git",

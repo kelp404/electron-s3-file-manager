@@ -32,3 +32,15 @@ darkreader.enable({
 });
 darkreader.exportGeneratedCSS().then(console.log);
 ```
+
+### Make database schema migration
+#### 1. Update models at `src/main-process/models/data/*.js`
+#### 2. Make migration script
+```bash
+npm run makemigration
+```
+
+### Run database schema migration scripts
+```bash
+npm run runmigration
+```
