@@ -44,7 +44,7 @@
   "devDependencies": {
     "@babel/core": "7.18.5",
     "@babel/eslint-parser": "7.18.2",
-    "@babel/preset-env": "7.18.2",
+    "@babel/preset-env": "7.18.10",
     "@babel/preset-react": "7.17.12",
     "@fortawesome/fontawesome-free": "6.1.2",
     "@kelp404/changelog.config": "0.1.0",
@@ -63,7 +63,7 @@
     "electron": "19.0.4",
     "electron-builder": "23.0.3",
     "electron-reload": "2.0.0-alpha.1",
-    "eslint": "8.22.0",
+    "eslint": "8.23.0",
     "eslint-config-xo": "0.40.0",
     "eslint-config-xo-react": "0.27.0",
     "eslint-plugin-import": "2.26.0",
