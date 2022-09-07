@@ -54,34 +54,36 @@ exports.syncObjectsFromS3 = async () => {
 		});
 
 		await Promise.all([
-			ObjectModel.bulkCreate(
-				result.Contents
-					.map(content => {
-						const pieces = content.Key.split('/').slice(0, -1);
+			result.Contents
+				? ObjectModel.bulkCreate(
+					result.Contents
+						.map(content => {
+							const pieces = content.Key.split('/').slice(0, -1);
 
-						return [
-							convertS3Object(content),
-							...pieces.map((piece, index) => convertS3Object({
-								Key: `${pieces.slice(0, index + 1).join('/')}/`,
-							})),
-						];
-					})
-					.flat()
-					.filter(object => {
-						if (object.type === OBJECT_TYPE.FILE) {
+							return [
+								convertS3Object(content),
+								...pieces.map((piece, index) => convertS3Object({
+									Key: `${pieces.slice(0, index + 1).join('/')}/`,
+								})),
+							];
+						})
+						.flat()
+						.filter(object => {
+							if (object.type === OBJECT_TYPE.FILE) {
+								pathSet.add(object.path);
+								return true;
+							}
+
+							if (pathSet.has(object.path)) {
+								return false;
+							}
+
 							pathSet.add(object.path);
 							return true;
-						}
-
-						if (pathSet.has(object.path)) {
-							return false;
-						}
-
-						pathSet.add(object.path);
-						return true;
-					}),
-				{updateOnDuplicate: ['type', 'lastModified', 'size', 'updatedAt', 'storageClass']},
-			),
+						}),
+					{updateOnDuplicate: ['type', 'lastModified', 'size', 'updatedAt', 'storageClass']},
+				)
+				: null,
 			result.NextContinuationToken ? scanObjects(result.NextContinuationToken) : null,
 		]);
 	};
