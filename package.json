@@ -63,7 +63,7 @@
     "electron": "19.0.4",
     "electron-builder": "23.0.3",
     "electron-reload": "2.0.0-alpha.1",
-    "eslint": "8.23.0",
+    "eslint": "8.22.0",
     "eslint-config-xo": "0.40.0",
     "eslint-config-xo-react": "0.27.0",
     "eslint-plugin-import": "2.26.0",
