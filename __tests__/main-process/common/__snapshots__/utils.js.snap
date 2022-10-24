@@ -3,3 +3,19 @@
 exports[`decrypt decrypt string with iv 1`] = `"test value"`;
 
 exports[`encrypt encrypt string with iv 1`] = `"8595b720aebb469f8ce1cb1c5982a813"`;
+
+exports[`parse keyword parse keyword 1`] = `
+{
+  "fields": {
+    "aId": "2048",
+    "uId": "1024",
+  },
+  "minus": [
+    "amd",
+  ],
+  "plus": [
+    "apple pencil",
+    "car",
+  ],
+}
+`;

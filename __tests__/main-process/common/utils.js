@@ -39,3 +39,11 @@ describe('decrypt', () => {
 		}).toThrow('Invalid initialization vector');
 	});
 });
+
+describe('parse keyword', () => {
+	test('parse keyword', () => {
+		const keywords = utils.parseKeyword('car "apple pencil" -amd uId:1024 aId: 2048');
+
+		expect(keywords).toMatchSnapshot();
+	});
+});
