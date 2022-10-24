@@ -1,25 +1,5 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`encrypt encrypt string with iv 1`] = `
-{
-  "data": [
-    133,
-    149,
-    183,
-    32,
-    174,
-    187,
-    70,
-    159,
-    140,
-    225,
-    203,
-    28,
-    89,
-    130,
-    168,
-    19,
-  ],
-  "type": "Buffer",
-}
-`;
+exports[`decrypt decrypt string with iv 1`] = `"test value"`;
+
+exports[`encrypt encrypt string with iv 1`] = `"8595b720aebb469f8ce1cb1c5982a813"`;
