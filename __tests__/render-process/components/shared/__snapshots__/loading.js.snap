@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`loading render 1`] = `
+<div
+  className="text-center text-muted py-5"
+>
+  <div
+    className="spinner-border"
+  >
+    <span
+      className="visually-hidden"
+    >
+      Loading...
+    </span>
+  </div>
+</div>
+`;
