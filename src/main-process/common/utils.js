@@ -2,6 +2,7 @@ const crypto = require('crypto');
 const sequelize = require('sequelize');
 const sqlString = require('sequelize/lib/sql-string');
 
+// 32 bytes key.
 const CRYPTO_KEY = Buffer.from(
 	'KgSAOli9bHgiQB+Verg5q5MUMRqYvEVSr38cNQe98L4=',
 	'base64',
@@ -9,7 +10,7 @@ const CRYPTO_KEY = Buffer.from(
 
 /**
  * @param {Buffer} value
- * @param {Buffer} iv
+ * @param {Buffer} iv - 16 bytes iv
  * @returns {Buffer}
  */
 exports.encrypt = ({value, iv}) => {
@@ -20,7 +21,7 @@ exports.encrypt = ({value, iv}) => {
 
 /**
  * @param {Buffer} value
- * @param {Buffer} iv
+ * @param {Buffer} iv - 16 bytes iv
  * @returns {Buffer}
  */
 exports.decrypt = ({value, iv}) => {
