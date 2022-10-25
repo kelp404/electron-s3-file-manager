@@ -47,3 +47,17 @@ describe('parse keyword', () => {
 		expect(keywords).toMatchSnapshot();
 	});
 });
+
+describe('generate like syntax', () => {
+	test('generateLikeSyntax start with keyword', () => {
+		const result = utils.generateLikeSyntax('key%w_ord', {start: ''});
+
+		expect(result).toMatchSnapshot();
+	});
+
+	test('generateLikeSyntax with keyword in any position', () => {
+		const result = utils.generateLikeSyntax('key%w_ord');
+
+		expect(result).toMatchSnapshot();
+	});
+});

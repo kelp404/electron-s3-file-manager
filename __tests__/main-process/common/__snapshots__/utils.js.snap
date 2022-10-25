@@ -4,6 +4,18 @@ exports[`decrypt decrypt string with iv 1`] = `"test value"`;
 
 exports[`encrypt encrypt string with iv 1`] = `"8595b720aebb469f8ce1cb1c5982a813"`;
 
+exports[`generate like syntax generateLikeSyntax start with keyword 1`] = `
+Literal {
+  "val": "'key\\%w\\_ord%' ESCAPE '\\'",
+}
+`;
+
+exports[`generate like syntax generateLikeSyntax with keyword in any position 1`] = `
+Literal {
+  "val": "'%key\\%w\\_ord%' ESCAPE '\\'",
+}
+`;
+
 exports[`parse keyword parse keyword 1`] = `
 {
   "fields": {

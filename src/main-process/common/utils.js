@@ -85,8 +85,8 @@ exports.parseKeyword = keyword => {
  * 	How to escape `$like` wildcard characters `%` and `_` in sequelize?
  * 	https://stackoverflow.com/a/44236635
  * @param {string} value
- * @param {string} start - "%"
- * @param {string} end - "%"
+ * @param {string} start - "%" | ""
+ * @param {string} end - "%" | ""
  * @returns {Literal}
  */
 exports.generateLikeSyntax = (value, {start = '%', end = '%'} = {}) => {
