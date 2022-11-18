@@ -9,6 +9,7 @@ beforeAll(() => {
 
 describe('ipc main api settings handler', () => {
 	test('get initial s3 settings', async () => {
+		console.log('start ----------------- getSettings', new Date());
 		const settings = await api.getSettings();
 
 		expect(settings).toMatchSnapshot();
