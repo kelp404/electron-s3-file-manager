@@ -1,7 +1,7 @@
-const {mockIpcMainApi} = require('../../utils');
 const {
 	api,
 } = require('../../../../src/main-process/preload/utils');
+const {mockIpcMainApi} = require('../../utils');
 
 beforeAll(() => {
 	mockIpcMainApi();
