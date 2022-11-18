@@ -1,5 +1,7 @@
 const fs = require('fs');
 const path = require('path');
+const {BadRequestError} = require('../../../shared/errors');
+const {MAIN_API} = require('../../../shared/constants/ipc');
 
 const basename = path.basename(__filename);
 const handlers = {};
@@ -19,4 +21,44 @@ fs
 		});
 	});
 
-module.exports = handlers;
+function generateIpcMainApiHandler() {
+	return async (event, args = {}) => {
+		const startTime = new Date();
+		let error;
+
+		try {
+			const {method, data} = args;
+			const handler = handlers[method];
+
+			if (typeof handler !== 'function') {
+				throw new BadRequestError(`not found "${method}"`);
+			}
+
+			const result = await handler({...data, $event: event});
+			return [null, result];
+		} catch (err) {
+			error = err;
+			return [
+				typeof error.toJSON === 'function' ? error.toJSON() : error,
+				null,
+			];
+		} finally {
+			const processTimeInMillisecond = Date.now() - startTime;
+			const processTime = `${processTimeInMillisecond}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
+			console.log(
+				`${MAIN_API} ${processTime.padStart(7)}ms ${`${args?.method}                              `.slice(0, 30)}`,
+				{data: args?.data},
+			);
+
+			if (error) {
+				console.error(error);
+			}
+		}
+	};
+}
+
+module.exports = {
+	handlers,
+	generateIpcMainApiHandler,
+};

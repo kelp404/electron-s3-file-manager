@@ -2,9 +2,6 @@ const path = require('path');
 const {app, BrowserWindow, ipcMain} = require('electron');
 const isDev = require('electron-is-dev');
 const {
-	BadRequestError,
-} = require('../shared/errors');
-const {
 	MAIN_API,
 	CONFIG: {GET_CONFIG},
 	DIALOG: {SHOW_ERROR_BOX, SHOW_OPEN_DIALOG},
@@ -27,7 +24,7 @@ function createWindow() {
 		width: 800,
 		height: 600,
 		webPreferences: {
-			preload: path.join(__dirname, 'preload.js'),
+			preload: path.join(__dirname, 'preload', 'index.js'),
 		},
 	});
 
@@ -41,45 +38,6 @@ function createWindow() {
 	return mainWindow;
 }
 
-function generateIpcMainApiHandler() {
-	const handlers = require('./ipc-handlers/main-api');
-
-	return async (event, args = {}) => {
-		const startTime = new Date();
-		let error;
-
-		try {
-			const {method, data} = args;
-			const handler = handlers[method];
-
-			if (typeof handler !== 'function') {
-				throw new BadRequestError(`not found "${method}"`);
-			}
-
-			const result = await handler({...data, $event: event});
-			return [null, result];
-		} catch (err) {
-			error = err;
-			return [
-				typeof error.toJSON === 'function' ? error.toJSON() : error,
-				null,
-			];
-		} finally {
-			const processTimeInMillisecond = Date.now() - startTime;
-			const processTime = `${processTimeInMillisecond}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-
-			console.log(
-				`${MAIN_API} ${processTime.padStart(7)}ms ${`${args?.method}                              `.slice(0, 30)}`,
-				{data: args?.data},
-			);
-
-			if (error) {
-				console.error(error);
-			}
-		}
-	};
-}
-
 ipcMain.handle(GET_CONFIG, configHandler.getConfig);
 ipcMain.handle(SHOW_ERROR_BOX, dialogHandler.showErrorBox);
 ipcMain.handle(SHOW_OPEN_DIALOG, dialogHandler.showOpenDialog);
@@ -89,6 +47,7 @@ app.whenReady().then(async () => {
 
 	const s3 = require('./common/s3');
 	const SettingsModel = require('./models/data/settings-model');
+	const {generateIpcMainApiHandler} = require('./ipc-handlers/main-api');
 	const settings = await SettingsModel.findOne({where: {id: MAIN_SETTINGS_ID}});
 
 	s3.updateSettings(settings);
