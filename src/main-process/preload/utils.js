@@ -29,12 +29,23 @@ exports.dialog = {
 };
 
 exports.api = {
+	/**
+	 * @param {{dirname, keyword, after, limit}} data
+	 * @returns {Promise<{
+	 * 	hasNextPage,
+	 * 	items: Array<{id, type, path, basename, dirname, updatedAt, createdAt}>,
+	 * }>}
+	 */
 	getObjects(data) {
 		return sendApiRequest({method: 'getObjects', data});
 	},
 	getObject(data) {
 		return sendApiRequest({method: 'getObject', data});
 	},
+	/**
+	 * @param {{dirname: (null|string), basename: string}} data
+	 * @returns {Promise<{id, type, path, basename, dirname, updatedAt, createdAt}>}
+	 */
 	createFolder(data) {
 		return sendApiRequest({method: 'createFolder', data});
 	},
@@ -86,15 +97,29 @@ exports.api = {
 			}
 		}
 	},
+	/**
+	 * @param {{ids: Array<number>}} data
+	 * @returns {Promise<null>}
+	 */
 	deleteObjects(data) {
 		return sendApiRequest({method: 'deleteObjects', data});
 	},
+	/**
+	 * @returns {Promise<null|{id, accessKeyId, bucket, region, updatedAt, createdAt}>}
+	 */
 	getSettings() {
 		return sendApiRequest({method: 'getSettings'});
 	},
+	/**
+	 * @param {{accessKeyId: string, secretAccessKey: string, region: string, bucket: string}} data
+	 * @returns {Promise<{id, accessKeyId, bucket, region, updatedAt, createdAt}>}
+	 */
 	updateS3Settings(data) {
 		return sendApiRequest({method: 'updateS3Settings', data});
 	},
+	/**
+	 * @returns {Promise<null>}
+	 */
 	syncObjectsFromS3() {
 		return sendApiRequest({method: 'syncObjectsFromS3'});
 	},

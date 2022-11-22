@@ -17,6 +17,17 @@ afterAll(async () => {
 });
 
 describe('ipc main api object handler', () => {
+	test.concurrent('sync objects from s3', async () => {
+		await api.syncObjectsFromS3();
+	});
+
+	test.concurrent('delete all objects', async () => {
+		const objects = await api.getObjects({limit: 500});
+		const objectIds = objects.items.map(object => object.id);
+
+		await api.deleteObjects({ids: objectIds});
+	});
+
 	test.concurrent('create folder', async () => {
 		const object = await api.createFolder({basename: 'folder'});
 

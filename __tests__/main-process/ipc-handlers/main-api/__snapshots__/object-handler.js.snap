@@ -5,7 +5,7 @@ exports[`ipc main api object handler create folder 1`] = `
   "basename": "folder",
   "createdAt": Any<Date>,
   "dirname": "",
-  "id": 1,
+  "id": 2,
   "path": "folder/",
   "type": 1,
   "updatedAt": Any<Date>,
