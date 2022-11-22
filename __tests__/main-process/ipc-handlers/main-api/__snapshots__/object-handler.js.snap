@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ipc main api object handler create folder 1`] = `
+{
+  "basename": "folder",
+  "createdAt": Any<Date>,
+  "dirname": "",
+  "id": 1,
+  "path": "folder/",
+  "type": 1,
+  "updatedAt": Any<Date>,
+}
+`;

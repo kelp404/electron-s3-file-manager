@@ -31,7 +31,7 @@ exports.updateS3Settings = async ({accessKeyId, secretAccessKey, region, bucket}
 			accessKeyId,
 			region,
 			bucket,
-			...secretAccessKey ? {secretAccessKey} : {},
+			...(secretAccessKey ? {secretAccessKey} : {}),
 		},
 		{
 			updateOnDuplicate: [

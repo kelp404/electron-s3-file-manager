@@ -1,3 +1,25 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`ipc main api settings handler get initial s3 settings 1`] = `null`;
+
+exports[`ipc main api settings handler get updated s3 settings 1`] = `
+{
+  "accessKeyId": "AKIAYH4DGJCGWFNOII7L",
+  "bucket": "integration-testing-or",
+  "createdAt": Any<Date>,
+  "id": 1,
+  "region": "us-west-2",
+  "updatedAt": Any<Date>,
+}
+`;
+
+exports[`ipc main api settings handler update s3 settings 1`] = `
+{
+  "accessKeyId": "AKIAYH4DGJCGWFNOII7L",
+  "bucket": "integration-testing-or",
+  "createdAt": Any<Date>,
+  "id": 1,
+  "region": "us-west-2",
+  "updatedAt": Any<Date>,
+}
+`;

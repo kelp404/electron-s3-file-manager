@@ -167,7 +167,7 @@ exports.getObject = path => {
  * @param {Object} options
  * @returns {Promise<PutObjectCommandOutput>}
  */
-exports.putObject = (path, options) => {
+exports.putObject = (path, options = {}) => {
 	const client = new S3Client({
 		region: settings.region,
 		credentials: {
@@ -179,6 +179,7 @@ exports.putObject = (path, options) => {
 		...options,
 		Bucket: settings.bucket,
 		Key: path,
+		...(options.Body == null ? {Body: null, ContentLength: 0} : {}),
 	});
 
 	return client.send(putObjectCommand);
