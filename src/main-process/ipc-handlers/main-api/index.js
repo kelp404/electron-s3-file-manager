@@ -48,7 +48,6 @@ function generateIpcMainApiHandler() {
 
 			console.log(
 				`${MAIN_API} ${processTime.padStart(7)}ms ${`${args?.method}                              `.slice(0, 30)}`,
-				{data: args?.data},
 			);
 
 			if (error) {

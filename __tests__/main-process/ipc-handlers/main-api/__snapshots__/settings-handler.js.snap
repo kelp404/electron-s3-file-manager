@@ -4,7 +4,7 @@ exports[`ipc main api settings handler get initial s3 settings 1`] = `null`;
 
 exports[`ipc main api settings handler get updated s3 settings 1`] = `
 {
-  "accessKeyId": "AKIAYH4DGJCGWFNOII7L",
+  "accessKeyId": "AKIAYH4DGJCGSOV2MKM6",
   "bucket": "integration-testing-or",
   "createdAt": Any<Date>,
   "id": 1,
@@ -15,7 +15,7 @@ exports[`ipc main api settings handler get updated s3 settings 1`] = `
 
 exports[`ipc main api settings handler update s3 settings 1`] = `
 {
-  "accessKeyId": "AKIAYH4DGJCGWFNOII7L",
+  "accessKeyId": "AKIAYH4DGJCGSOV2MKM6",
   "bucket": "integration-testing-or",
   "createdAt": Any<Date>,
   "id": 1,

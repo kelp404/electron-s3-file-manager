@@ -62,6 +62,7 @@
     "css-minimizer-webpack-plugin": "4.0.0",
     "darkreader": "4.9.51",
     "dayjs": "1.11.5",
+    "dotenv": "16.0.3",
     "electron": "19.0.4",
     "electron-builder": "23.3.3",
     "electron-mock-ipc": "0.3.12",

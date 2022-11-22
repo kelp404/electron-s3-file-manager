@@ -1,3 +1,4 @@
+require('dotenv').config();
 const pLimit = require('p-limit');
 const {ipcMain} = require('electron');
 const {
@@ -8,8 +9,8 @@ const {
 } = require('../../src/main-process/preload/utils');
 
 const AWS_CONFIG = {
-	accessKeyId: 'AKIAYH4DGJCGWFNOII7L',
-	secretAccessKey: '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',
+	accessKeyId: process.env.S3_ACCESS_KEY_ID,
+	secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
 	region: 'us-west-2',
 	bucket: 'integration-testing-or',
 };

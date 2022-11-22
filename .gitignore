@@ -10,3 +10,6 @@ package-lock.json
 
 # build
 dist/
+
+# config
+.env
