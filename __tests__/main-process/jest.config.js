@@ -21,6 +21,7 @@ module.exports = {
 		'__tests__/main-process/test-environment.js',
 		'__tests__/main-process/utils.js',
 		'__tests__/main-process/mocks',
+		'__tests__/main-process/resources',
 		'__tests__/render-process',
 	],
 };

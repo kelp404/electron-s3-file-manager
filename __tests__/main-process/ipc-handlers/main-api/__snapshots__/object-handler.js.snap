@@ -5,9 +5,73 @@ exports[`ipc main api object handler create folder 1`] = `
   "basename": "folder",
   "createdAt": Any<Date>,
   "dirname": "",
-  "id": 2,
+  "id": Any<Number>,
   "path": "folder/",
   "type": 1,
   "updatedAt": Any<Date>,
+}
+`;
+
+exports[`ipc main api object handler create image file 1`] = `
+{
+  "basename": "image.png",
+  "createdAt": Any<Date>,
+  "dirname": "folder",
+  "id": Any<Number>,
+  "lastModified": Any<Date>,
+  "path": "folder/image.png",
+  "size": 107,
+  "storageClass": "STANDARD",
+  "type": 2,
+  "updatedAt": Any<Date>,
+}
+`;
+
+exports[`ipc main api object handler get image file 1`] = `
+{
+  "basename": "image.png",
+  "createdAt": Any<Date>,
+  "dirname": "folder",
+  "id": Any<Number>,
+  "lastModified": Any<Date>,
+  "objectHeaders": {
+    "$metadata": {
+      "attempts": 1,
+      "cfId": undefined,
+      "extendedRequestId": Any<String>,
+      "httpStatusCode": 200,
+      "requestId": undefined,
+      "totalRetryDelay": 0,
+    },
+    "AcceptRanges": "bytes",
+    "ContentLength": 107,
+    "ContentType": "image/png",
+    "ETag": ""9514e829532c92987e4ed2294153480e"",
+    "Expiration": "expiry-date="Sat, 26 Nov 2022 00:00:00 GMT", rule-id="clean-old-data"",
+    "LastModified": Any<Date>,
+    "Metadata": {},
+  },
+  "path": "folder/image.png",
+  "size": 107,
+  "storageClass": "STANDARD",
+  "type": 2,
+  "updatedAt": Any<Date>,
+  "url": Any<String>,
+}
+`;
+
+exports[`ipc main api object handler get image file 2`] = `
+{
+  "accept-ranges": "bytes",
+  "connection": "close",
+  "content-length": "107",
+  "content-type": "image/png",
+  "date": Any<String>,
+  "etag": ""9514e829532c92987e4ed2294153480e"",
+  "last-modified": Any<String>,
+  "server": "AmazonS3",
+  "x-amz-expiration": "expiry-date="Sat, 26 Nov 2022 00:00:00 GMT", rule-id="clean-old-data"",
+  "x-amz-id-2": Any<String>,
+  "x-amz-request-id": Any<String>,
 }
 `;

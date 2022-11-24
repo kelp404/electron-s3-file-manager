@@ -39,6 +39,13 @@ exports.api = {
 	getObjects(data) {
 		return sendApiRequest({method: 'getObjects', data});
 	},
+	/**
+	 * @param {{id: number}} data
+	 * @returns {Promise<{
+	 * 	id, type, url, basename, dirname, path, size, storageClass, lastModified, updatedAt, createdAt,
+	 * 	objectHeaders,
+	 * }>}
+	 */
 	getObject(data) {
 		return sendApiRequest({method: 'getObject', data});
 	},
