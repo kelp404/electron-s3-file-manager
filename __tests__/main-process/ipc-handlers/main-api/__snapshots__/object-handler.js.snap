@@ -40,7 +40,7 @@ exports[`ipc main api object handler get image file 1`] = `
       "cfId": undefined,
       "extendedRequestId": Any<String>,
       "httpStatusCode": 200,
-      "requestId": undefined,
+      "requestId": Any<String>,
       "totalRetryDelay": 0,
     },
     "AcceptRanges": "bytes",

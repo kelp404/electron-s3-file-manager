@@ -82,6 +82,7 @@ describe('ipc main api object handler', () => {
 			objectHeaders: {
 				$metadata: {
 					extendedRequestId: expect.any(String),
+					requestId: expect.any(String),
 				},
 				Expiration: expect.any(String),
 				LastModified: expect.any(Date),
