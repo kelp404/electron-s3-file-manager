@@ -2,7 +2,7 @@
   "name": "electron-s3-file-manager",
   "productName": "Electron S3 File Manager",
   "bundleID": "io.github.kelp404.electron-s3-file-manager",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "A GUI AWS S3 file manager. It supports keyword search, download, upload and preview video.",
   "main": "dist/main-process/index.js",
   "scripts": {
