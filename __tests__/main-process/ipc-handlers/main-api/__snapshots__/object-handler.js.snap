@@ -47,7 +47,7 @@ exports[`ipc main api object handler get image file 1`] = `
     "ContentLength": 107,
     "ContentType": "image/png",
     "ETag": ""9514e829532c92987e4ed2294153480e"",
-    "Expiration": "expiry-date="Sat, 26 Nov 2022 00:00:00 GMT", rule-id="clean-old-data"",
+    "Expiration": Any<String>,
     "LastModified": Any<Date>,
     "Metadata": {},
   },
@@ -70,7 +70,7 @@ exports[`ipc main api object handler get image file 2`] = `
   "etag": ""9514e829532c92987e4ed2294153480e"",
   "last-modified": Any<String>,
   "server": "AmazonS3",
-  "x-amz-expiration": "expiry-date="Sat, 26 Nov 2022 00:00:00 GMT", rule-id="clean-old-data"",
+  "x-amz-expiration": Any<String>,
   "x-amz-id-2": Any<String>,
   "x-amz-request-id": Any<String>,
 }

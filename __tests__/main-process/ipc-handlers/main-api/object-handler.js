@@ -83,6 +83,7 @@ describe('ipc main api object handler', () => {
 				$metadata: {
 					extendedRequestId: expect.any(String),
 				},
+				Expiration: expect.any(String),
 				LastModified: expect.any(Date),
 			},
 		});
@@ -93,6 +94,7 @@ describe('ipc main api object handler', () => {
 				expect(response.headers).toMatchSnapshot({
 					date: expect.any(String),
 					'last-modified': expect.any(String),
+					'x-amz-expiration': expect.any(String),
 					'x-amz-id-2': expect.any(String),
 					'x-amz-request-id': expect.any(String),
 				});
