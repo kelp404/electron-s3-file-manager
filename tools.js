@@ -53,6 +53,7 @@ async function sync() {
 function build() {
 	return require('electron-builder')
 		.build({
+			x64: true,
 			projectDir: path.resolve(__dirname),
 			win: ['portable'],
 			mac: ['dmg'],
