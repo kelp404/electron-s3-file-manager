@@ -4,7 +4,7 @@ updates:
     directory: /
     schedule:
       interval: daily
-    open-pull-requests-limit: 20
+    open-pull-requests-limit: 30
     reviewers:
       - kelp404
     commit-message:
