@@ -1,0 +1,35 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`error-icon render 1`] = `
+<div
+  className="swal2-icon swal2-error swal2-icon-show d-flex"
+>
+  <span
+    className="swal2-x-mark"
+  >
+    <span
+      className="swal2-x-mark-line-left"
+    />
+    <span
+      className="swal2-x-mark-line-right"
+    />
+  </span>
+</div>
+`;
+
+exports[`error-icon render with props 1`] = `
+<div
+  className="swal2-icon swal2-error swal2-icon-show d-flex m-2"
+>
+  <span
+    className="swal2-x-mark"
+  >
+    <span
+      className="swal2-x-mark-line-left"
+    />
+    <span
+      className="swal2-x-mark-line-right"
+    />
+  </span>
+</div>
+`;
