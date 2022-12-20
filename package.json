@@ -72,7 +72,7 @@
     "eslint-config-xo": "0.40.0",
     "eslint-config-xo-react": "0.27.0",
     "eslint-plugin-import": "2.26.0",
-    "eslint-plugin-react": "7.30.0",
+    "eslint-plugin-react": "7.31.11",
     "eslint-plugin-react-hooks": "4.6.0",
     "fastest-validator": "1.15.0",
     "filesize": "9.0.11",
