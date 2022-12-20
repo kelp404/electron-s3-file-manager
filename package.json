@@ -74,7 +74,7 @@
     "eslint-plugin-import": "2.26.0",
     "eslint-plugin-react": "7.31.11",
     "eslint-plugin-react-hooks": "4.6.0",
-    "fastest-validator": "1.15.0",
+    "fastest-validator": "1.16.0",
     "filesize": "9.0.11",
     "formik": "2.2.9",
     "html-webpack-plugin": "5.5.0",
