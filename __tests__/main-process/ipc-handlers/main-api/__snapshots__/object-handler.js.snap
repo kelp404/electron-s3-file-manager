@@ -50,6 +50,7 @@ exports[`ipc main api object handler get image file 1`] = `
     "Expiration": Any<String>,
     "LastModified": Any<Date>,
     "Metadata": {},
+    "ServerSideEncryption": "AES256",
   },
   "path": "folder/image.png",
   "size": 107,
@@ -73,5 +74,6 @@ exports[`ipc main api object handler get image file 2`] = `
   "x-amz-expiration": Any<String>,
   "x-amz-id-2": Any<String>,
   "x-amz-request-id": Any<String>,
+  "x-amz-server-side-encryption": "AES256",
 }
 `;
