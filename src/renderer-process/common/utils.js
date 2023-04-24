@@ -1,5 +1,5 @@
 const dayjs = require('dayjs');
-const filesize = require('filesize');
+const {filesize} = require('filesize');
 
 /**
  * Convert the fastest-validator validate function for Formik.
