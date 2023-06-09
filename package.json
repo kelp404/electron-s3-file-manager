@@ -47,7 +47,7 @@
   "devDependencies": {
     "@babel/core": "7.21.4",
     "@babel/eslint-parser": "7.21.3",
-    "@babel/preset-env": "7.21.4",
+    "@babel/preset-env": "7.22.5",
     "@babel/preset-react": "7.18.6",
     "@fortawesome/fontawesome-free": "6.1.2",
     "@kelp404/changelog.config": "0.1.0",
