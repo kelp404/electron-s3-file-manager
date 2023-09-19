@@ -1,0 +1,180 @@
+{
+    "tables": {
+        "objects": {
+            "tableName": "objects",
+            "schema": {
+                "id": {
+                    "allowNull": false,
+                    "primaryKey": true,
+                    "autoIncrement": true,
+                    "field": "id",
+                    "seqType": "Sequelize.INTEGER"
+                },
+                "type": {
+                    "allowNull": false,
+                    "validate": {
+                        "isIn": [
+                            [
+                                1,
+                                2
+                            ]
+                        ]
+                    },
+                    "field": "type",
+                    "seqType": "Sequelize.TINYINT"
+                },
+                "path": {
+                    "allowNull": false,
+                    "field": "path",
+                    "seqType": "Sequelize.STRING(1024)"
+                },
+                "dirname": {
+                    "allowNull": false,
+                    "field": "dirname",
+                    "seqType": "Sequelize.STRING(1024)"
+                },
+                "basename": {
+                    "allowNull": false,
+                    "field": "basename",
+                    "seqType": "Sequelize.CITEXT"
+                },
+                "lastModified": {
+                    "allowNull": true,
+                    "defaultValue": {
+                        "internal": true,
+                        "value": "Sequelize.NOW"
+                    },
+                    "field": "lastModified",
+                    "seqType": "Sequelize.DATE"
+                },
+                "size": {
+                    "allowNull": true,
+                    "defaultValue": {
+                        "value": 0
+                    },
+                    "field": "size",
+                    "seqType": "Sequelize.BIGINT"
+                },
+                "storageClass": {
+                    "allowNull": true,
+                    "validate": {
+                        "isIn": [
+                            [
+                                1,
+                                2,
+                                3,
+                                4,
+                                5,
+                                6,
+                                7,
+                                8,
+                                9
+                            ]
+                        ]
+                    },
+                    "field": "storageClass",
+                    "seqType": "Sequelize.TINYINT"
+                },
+                "createdAt": {
+                    "allowNull": false,
+                    "field": "createdAt",
+                    "seqType": "Sequelize.DATE"
+                },
+                "updatedAt": {
+                    "allowNull": false,
+                    "field": "updatedAt",
+                    "seqType": "Sequelize.DATE"
+                }
+            },
+            "indexes": {
+                "183f280b8914e4555e01bc7ea2b5a6d53968a206": {
+                    "unique": true,
+                    "fields": [
+                        "path"
+                    ],
+                    "name": "objects_path",
+                    "options": {
+                        "indexName": "objects_path",
+                        "name": "objects_path",
+                        "indicesType": "UNIQUE",
+                        "type": "UNIQUE"
+                    }
+                },
+                "3ec0abbcc3a1c6da61ddba1070d200bc91de5e23": {
+                    "unique": false,
+                    "fields": [
+                        "updatedAt"
+                    ],
+                    "name": "objects_updated_at",
+                    "options": {
+                        "indexName": "objects_updated_at",
+                        "name": "objects_updated_at"
+                    }
+                },
+                "bfeb9da4c77d8c67376eb7071c7003b1bc16f46e": {
+                    "unique": false,
+                    "fields": [
+                        "dirname",
+                        "type",
+                        "basename",
+                        "id"
+                    ],
+                    "name": "objects_dirname_type_basename_id",
+                    "options": {
+                        "indexName": "objects_dirname_type_basename_id",
+                        "name": "objects_dirname_type_basename_id"
+                    }
+                }
+            }
+        },
+        "settings": {
+            "tableName": "settings",
+            "schema": {
+                "id": {
+                    "allowNull": false,
+                    "primaryKey": true,
+                    "autoIncrement": true,
+                    "field": "id",
+                    "seqType": "Sequelize.INTEGER"
+                },
+                "cryptoIv": {
+                    "allowNull": true,
+                    "field": "cryptoIv",
+                    "seqType": "Sequelize.STRING"
+                },
+                "accessKeyId": {
+                    "allowNull": true,
+                    "field": "accessKeyId",
+                    "seqType": "Sequelize.STRING"
+                },
+                "secretAccessKey": {
+                    "allowNull": true,
+                    "field": "secretAccessKey",
+                    "seqType": "Sequelize.STRING"
+                },
+                "region": {
+                    "allowNull": true,
+                    "field": "region",
+                    "seqType": "Sequelize.STRING"
+                },
+                "bucket": {
+                    "allowNull": true,
+                    "field": "bucket",
+                    "seqType": "Sequelize.STRING"
+                },
+                "createdAt": {
+                    "allowNull": false,
+                    "field": "createdAt",
+                    "seqType": "Sequelize.DATE"
+                },
+                "updatedAt": {
+                    "allowNull": false,
+                    "field": "updatedAt",
+                    "seqType": "Sequelize.DATE"
+                }
+            },
+            "indexes": []
+        }
+    },
+    "revision": 1
+}

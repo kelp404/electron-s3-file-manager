@@ -118,7 +118,7 @@ exports.api = {
 		return sendApiRequest({method: 'getSettings'});
 	},
 	/**
-	 * @param {{accessKeyId: string, secretAccessKey: string, region: string, bucket: string}} data
+	 * @param {{accessKeyId: string, secretAccessKey: string, region: string, bucket: string, endpoint: string}} data
 	 * @returns {Promise<{id, accessKeyId, bucket, region, updatedAt, createdAt}>}
 	 */
 	updateS3Settings(data) {

@@ -5,6 +5,7 @@ exports.setupS3SettingsFormSchema = {
 	secretAccessKey: settingsSchema.secretAccessKey,
 	region: settingsSchema.region,
 	bucket: settingsSchema.bucket,
+	endpoint: settingsSchema.endpoint,
 };
 
 exports.updateS3SettingsFormSchema = {
@@ -16,4 +17,9 @@ exports.updateS3SettingsFormSchema = {
 	},
 	region: settingsSchema.region,
 	bucket: settingsSchema.bucket,
+	endpoint: {
+		...settingsSchema.endpoint,
+		optional: true,
+		empty: true,
+	},
 };

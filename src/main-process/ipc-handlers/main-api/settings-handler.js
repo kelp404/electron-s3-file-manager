@@ -24,7 +24,7 @@ exports.getSettings = async () => {
  * @param {string} bucket
  * @returns {Promise<SettingsModel>}
  */
-exports.updateS3Settings = async ({accessKeyId, secretAccessKey, region, bucket} = {}) => {
+exports.updateS3Settings = async ({accessKeyId, secretAccessKey, region, bucket, endpoint} = {}) => {
 	await SettingsModel.upsert(
 		{
 			id: MAIN_SETTINGS_ID,
@@ -32,6 +32,7 @@ exports.updateS3Settings = async ({accessKeyId, secretAccessKey, region, bucket}
 			region,
 			bucket,
 			...(secretAccessKey ? {secretAccessKey} : {}),
+			endpoint,
 		},
 		{
 			updateOnDuplicate: [
@@ -39,6 +40,7 @@ exports.updateS3Settings = async ({accessKeyId, secretAccessKey, region, bucket}
 				'secretAccessKey',
 				'region',
 				'bucket',
+				'endpoint',
 				'cryptoIv',
 				'updatedAt',
 			],

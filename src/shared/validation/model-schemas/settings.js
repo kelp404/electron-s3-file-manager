@@ -19,4 +19,9 @@ module.exports = {
 		empty: false,
 		max: 255,
 	},
+	endpoint: {
+		type: 'string',
+		empty: true,
+		max: 255,
+	},
 };

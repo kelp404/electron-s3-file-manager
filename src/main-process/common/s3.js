@@ -34,17 +34,20 @@ exports.syncObjectsFromS3 = async () => {
 	const start = new Date();
 	const client = new S3Client({
 		region: settings.region,
+		endpoint: settings.endpoint,
 		credentials: {
 			accessKeyId: settings.accessKeyId,
 			secretAccessKey: settings.secretAccessKey,
 		},
 	});
+
 	const scanObjects = async continuationToken => {
 		const pathSet = new Set();
 		const result = await client.send(new ListObjectsV2Command({
 			Bucket: settings.bucket,
 			ContinuationToken: continuationToken,
 		}));
+
 		const convertS3Object = ({Key, Size, LastModified, StorageClass}) => ({
 			type: Key.slice(-1) === '/' ? OBJECT_TYPE.FOLDER : OBJECT_TYPE.FILE,
 			path: Key,
@@ -105,6 +108,7 @@ exports.syncObjectsFromS3 = async () => {
 exports.headObject = (path, options) => {
 	const client = new S3Client({
 		region: settings.region,
+		endpoint: settings.endpoint,
 		credentials: {
 			accessKeyId: settings.accessKeyId,
 			secretAccessKey: settings.secretAccessKey,
@@ -127,6 +131,7 @@ exports.headObject = (path, options) => {
 exports.getSignedUrl = (path, {expiresIn = 24 * 60 * 60} = {}) => {
 	const client = new S3Client({
 		region: settings.region,
+		endpoint: settings.endpoint,
 		credentials: {
 			accessKeyId: settings.accessKeyId,
 			secretAccessKey: settings.secretAccessKey,
@@ -148,6 +153,7 @@ exports.getSignedUrl = (path, {expiresIn = 24 * 60 * 60} = {}) => {
 exports.getObject = path => {
 	const client = new S3Client({
 		region: settings.region,
+		endpoint: settings.endpoint,
 		credentials: {
 			accessKeyId: settings.accessKeyId,
 			secretAccessKey: settings.secretAccessKey,
@@ -170,6 +176,7 @@ exports.getObject = path => {
 exports.putObject = (path, options = {}) => {
 	const client = new S3Client({
 		region: settings.region,
+		endpoint: settings.endpoint,
 		credentials: {
 			accessKeyId: settings.accessKeyId,
 			secretAccessKey: settings.secretAccessKey,
@@ -195,6 +202,7 @@ exports.putObject = (path, options = {}) => {
 exports.upload = ({path, content, options, onProgress}) => {
 	const client = new S3Client({
 		region: settings.region,
+		endpoint: settings.endpoint,
 		credentials: {
 			accessKeyId: settings.accessKeyId,
 			secretAccessKey: settings.secretAccessKey,
@@ -225,6 +233,7 @@ exports.upload = ({path, content, options, onProgress}) => {
 exports.deleteObjects = paths => {
 	const client = new S3Client({
 		region: settings.region,
+		endpoint: settings.endpoint,
 		credentials: {
 			accessKeyId: settings.accessKeyId,
 			secretAccessKey: settings.secretAccessKey,

@@ -37,6 +37,7 @@ module.exports = class Settings extends Base {
 			secretAccessKey: '',
 			region: settings?.region || '',
 			bucket: settings?.bucket || '',
+			endpoint: settings?.endpoint || '',
 		};
 	}
 
@@ -187,6 +188,23 @@ module.exports = class Settings extends Base {
 							(errors.bucket && isSubmitted) && (
 								<div className="invalid-feedback">
 									{errors.bucket}
+								</div>
+							)
+						}
+					</div>
+					<div className="mb-3">
+						<label htmlFor="input-endpoint" className="form-label">Endpoint</label>
+						<Field
+							type="text" id="input-endpoint" name="endpoint"
+							className={classnames(
+								'form-control',
+								{'is-invalid': errors.endpoint && isSubmitted},
+							)}
+							maxLength={updateS3SettingsFormSchema.endpoint.max}/>
+						{
+							(errors.endpoint && isSubmitted) && (
+								<div className="invalid-feedback">
+									{errors.endpoint}
 								</div>
 							)
 						}

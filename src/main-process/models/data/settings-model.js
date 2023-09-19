@@ -47,6 +47,10 @@ const attributes = {
 		type: DataTypes.STRING,
 		allowNull: true,
 	},
+	endpoint: {
+		type: DataTypes.STRING,
+		allowNull: true,
+	},
 };
 const options = {
 	indexes: [],
