@@ -206,12 +206,12 @@ exports.createFile = async ({$event, localPath, dirname, onProgressChannel} = {}
 		throw error;
 	}
 
-	try {
+	try {		
 		await s3.upload({
 			path: object.path,
 			content: fs.createReadStream(localPath),
 			options: {
-				ContentType: mimeTypes.lookup(basename),
+				ContentType: (mimeTypes.lookup(basename)) || 'application/octet-stream',
 			},
 			onProgress,
 		});
