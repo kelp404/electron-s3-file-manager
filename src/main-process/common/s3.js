@@ -182,6 +182,7 @@ exports.putObject = (path, options = {}) => {
 			secretAccessKey: settings.secretAccessKey,
 		},
 	});
+
 	const putObjectCommand = new PutObjectCommand({
 		...options,
 		Bucket: settings.bucket,
@@ -208,6 +209,7 @@ exports.upload = ({path, content, options, onProgress}) => {
 			secretAccessKey: settings.secretAccessKey,
 		},
 	});
+
 	const upload = new Upload({
 		client,
 		params: {

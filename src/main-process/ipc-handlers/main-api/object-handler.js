@@ -206,7 +206,8 @@ exports.createFile = async ({$event, localPath, dirname, onProgressChannel} = {}
 		throw error;
 	}
 
-	try {		
+	try {
+		console.log(mimeTypes.lookup(basename));
 		await s3.upload({
 			path: object.path,
 			content: fs.createReadStream(localPath),
@@ -221,6 +222,7 @@ exports.createFile = async ({$event, localPath, dirname, onProgressChannel} = {}
 		object.lastModified = objectHeaders.LastModified;
 		await object.save();
 	} catch (error) {
+		console.log(error.message);
 		await object.destroy();
 		throw error;
 	}

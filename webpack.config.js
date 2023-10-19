@@ -8,7 +8,7 @@ module.exports = () => {
 
 	return {
 		target: 'web',
-		mode: IS_DEVELOPMENT ? 'development' : 'production',
+		mode: 'development', //'production',
 		entry: {
 			renderer: path.join(__dirname, 'src', 'renderer-process', 'index.js'),
 			'dark-theme': path.join(__dirname, 'src', 'renderer-process', 'stylesheets', 'dark-theme.scss'),

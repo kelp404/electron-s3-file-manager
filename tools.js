@@ -56,7 +56,7 @@ function build() {
 			x64: true,
 			projectDir: path.resolve(__dirname),
 			win: ['portable'],
-			mac: ['dmg'],
+			// mac: ['dmg'],
 			config: {
 				copyright: 'Copyright © 2022 kelp404',
 				directories: {

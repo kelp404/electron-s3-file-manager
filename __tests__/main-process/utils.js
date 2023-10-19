@@ -30,6 +30,7 @@ exports.setS3Settings = async () => api.updateS3Settings({
 	secretAccessKey: AWS_CONFIG.secretAccessKey,
 	region: AWS_CONFIG.region,
 	bucket: AWS_CONFIG.bucket,
+	endpoint: AWS_CONFIG.endpoint,
 });
 
 exports.cleanDatabase = async () => {

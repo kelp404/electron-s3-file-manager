@@ -19,7 +19,7 @@ exports.connectDatabase = ({isLogSQL = false} = {}) => {
 	exports._sequelize = exports._sequelize || new Sequelize({
 		dialect: 'sqlite',
 		storage: exports.DATABASE_PATH,
-		logging: isLogSQL ? console.log : false,
+		logging: false //isLogSQL && ? console.log : false,
 	});
 
 	return {
