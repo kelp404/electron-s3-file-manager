@@ -91,7 +91,7 @@
     "react-dom": "18.2.0",
     "react-test-renderer": "18.2.0",
     "sass": "1.57.1",
-    "sass-loader": "13.2.0",
+    "sass-loader": "13.3.3",
     "sweetalert2": "11.6.15",
     "wait-on": "6.0.1",
     "webpack": "5.81.0",
