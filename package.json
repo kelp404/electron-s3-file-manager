@@ -40,7 +40,7 @@
     "electron-is-dev": "2.0.0",
     "lodash": "4.17.21",
     "mime-types": "2.1.35",
-    "p-limit": "3.1.0",
+    "p-limit": "6.1.0",
     "sequelize": "6.31.0",
     "sqlite3": "5.1.6"
   },
